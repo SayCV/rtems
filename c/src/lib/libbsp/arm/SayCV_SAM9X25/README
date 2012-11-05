@@ -1,0 +1,10 @@
+This is the BSP for SayCV-SAM9X25 Board using the Atmel AT91SAM9X25 CPU.
+The board basic configuration of RAM and ROM:
+
+SayCV-SAM9X25
+================
+128MB DDRII RAM
+256MB NAND FLASH
+16MB  NOR  FLASH
+
+Ready To Test.
