@@ -2,6 +2,8 @@
 AC_DEFUN([RTEMS_CHECK_BSPDIR],
 [
   case "$1" in
+  SayCV_SAM9X25 )
+    AC_CONFIG_SUBDIRS([SayCV_SAM9X25]);;
   csb336 )
     AC_CONFIG_SUBDIRS([csb336]);;
   csb337 )

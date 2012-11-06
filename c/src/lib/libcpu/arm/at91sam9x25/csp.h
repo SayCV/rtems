@@ -2,7 +2,7 @@
 *********************************************************************************************************
 *        CSP
 * Chip Support Package
-* Filename      : csp_dev.h
+* Filename      : csp.h
 * Note(s)       : 
 *
 *  The license and distribution terms for this file may be
@@ -18,8 +18,8 @@
 *********************************************************************************************************
 */
 
-#ifndef  CSP_DEV_PRESENT
-#define  CSP_DEV_PRESENT
+#ifndef  CSP_PRESENT
+#define  CSP_PRESENT
 
 
 /*$PAGE*/
@@ -28,6 +28,11 @@
 *                                            INCLUDE FILES
 *********************************************************************************************************
 */
+#include  <csp_types.h>
+#include  <csp_dev.h>
+#include  <csp_grp.h>
+#include  <csp_pmc.h>
+#include  <csp_usart.h>
 
 
 /*
@@ -36,10 +41,10 @@
 *********************************************************************************************************
 */
 
-#ifdef   CSP_DEV_MODULE
-#define  CSP_DEV_EXT
+#ifdef   CSP_MODULE
+#define  CSP_EXT
 #else
-#define  CSP_DEV_EXT  extern
+#define  CSP_EXT  extern
 #endif
 
 
@@ -56,30 +61,6 @@
 *********************************************************************************************************
 */
 
-#define  CSP_DEV_AT91SAM9X25
-#define  CSP_DEV_NAME                           "AT91SAM9X25"
-
-/*
-*********************************************************************************************************
-*                                       SAM9X25 PERIPHERALS ENABLES
-*********************************************************************************************************
-*/
-
-#define  CSP_DEV_USB_DEV_EN                     DEF_DISABLED
-#define  CSP_DEV_USB_OTG_EN                     DEF_DISABLED
-#define  CSP_DEV_ETHER_EN                       DEF_ENABLED
-#define  CSP_DEV_CAN_EN                         DEF_ENABLED
-
-
-/*
-*********************************************************************************************************
-*                                       SAM9X25 MEMORIES SIZE DEFINES
-*********************************************************************************************************
-*/
-
-#define  CSP_DEV_FLASH_SIZE                     (256u * 1024u)
-#define  CSP_DEV_DDRAM_SIZE                     ( 128u * 1024u)
-
 
 /*
 *********************************************************************************************************
@@ -87,5 +68,5 @@
 *********************************************************************************************************
 */
 
-#endif                                                          /* End of CSP_DEV module include.                      */
+#endif                                                          /* End of CSP module include.                      */
 

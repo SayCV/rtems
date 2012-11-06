@@ -29,7 +29,7 @@
 */
 
 
-#include <csp_types.h>
+//#include <csp_types.h>
 
 /*
 *********************************************************************************************************
@@ -194,6 +194,10 @@
 #define	CSP_INT_SRC_NBR_IRQ						(CSP_DEV_NBR)(31u)	/**<	\brief	Advanced	Interrupt	Controller	(IRQ)	*/              
 
 #define  CSP_INT_SRC_NBR_MAX                    (CSP_DEV_NBR)(32u)    /* Total number of external sources                 */
+
+#define BSP_INTERRUPT_VECTOR_MIN			0
+
+#define BSP_INTERRUPT_VECTOR_MAX			(CSP_INT_SRC_NBR_MAX - 1)
 
 
 /*
