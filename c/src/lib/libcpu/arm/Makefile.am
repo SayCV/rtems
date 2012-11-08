@@ -120,6 +120,7 @@ include_HEADERS += at91sam9x25/csp_emac.h
 ## at91sam9x25 clock
 noinst_PROGRAMS += at91sam9x25/clock.rel
 at91sam9x25_clock_rel_SOURCES = at91sam9x25/csp_clock.c
+at91sam9x25_clock_rel_SOURCES += at91sam9x25/csp.c
 at91sam9x25_clock_rel_CPPFLAGS = $(AM_CPPFLAGS)
 at91sam9x25_clock_rel_LDFLAGS = $(RTEMS_RELLDFLAGS)
 
