@@ -107,6 +107,56 @@ at91rm9200_irq_rel_CPPFLAGS = $(AM_CPPFLAGS)
 at91rm9200_irq_rel_LDFLAGS = $(RTEMS_RELLDFLAGS)
 endif
 
+if at91sam9x25
+include_HEADERS = 
+include_HEADERS += at91sam9x25/csp.h
+include_HEADERS += at91sam9x25/csp_types.h 
+include_HEADERS += at91sam9x25/csp_dev.h
+include_HEADERS += at91sam9x25/csp_grp.h 
+include_HEADERS += at91sam9x25/csp_pmc.h
+include_HEADERS += at91sam9x25/csp_usart.h
+include_HEADERS += at91sam9x25/csp_emac.h 
+
+## at91sam9x25 clock
+noinst_PROGRAMS += at91sam9x25/clock.rel
+at91sam9x25_clock_rel_SOURCES = at91sam9x25/csp_clock.c
+at91sam9x25_clock_rel_CPPFLAGS = $(AM_CPPFLAGS)
+at91sam9x25_clock_rel_LDFLAGS = $(RTEMS_RELLDFLAGS)
+
+## at91sam9x25/dbgu
+noinst_PROGRAMS += at91sam9x25/dbgu.rel
+at91sam9x25_dbgu_rel_SOURCES = at91sam9x25/csp_dbgu.c
+at91sam9x25_dbgu_rel_CPPFLAGS = $(AM_CPPFLAGS)
+at91sam9x25_dbgu_rel_LDFLAGS = $(RTEMS_RELLDFLAGS)
+
+## at91sam9x25/usart
+noinst_PROGRAMS += at91sam9x25/usart.rel
+at91sam9x25_usart_rel_SOURCES = at91sam9x25/csp_usart.c
+at91sam9x25_usart_rel_CPPFLAGS = $(AM_CPPFLAGS)
+at91sam9x25_usart_rel_LDFLAGS = $(RTEMS_RELLDFLAGS)
+
+## at91sam9x25/timer
+noinst_PROGRAMS += at91sam9x25/timer.rel
+at91sam9x25_timer_rel_SOURCES = at91sam9x25/csp_timer.c
+at91sam9x25_timer_rel_CPPFLAGS = $(AM_CPPFLAGS)
+at91sam9x25_timer_rel_LDFLAGS = $(RTEMS_RELLDFLAGS)
+
+## at91sam9x25/pmc
+noinst_PROGRAMS += at91sam9x25/pmc.rel
+at91sam9x25_pmc_rel_SOURCES = at91sam9x25/csp_pmc.c
+at91sam9x25_pmc_rel_CPPFLAGS = $(AM_CPPFLAGS)
+at91sam9x25_pmc_rel_LDFLAGS = $(RTEMS_RELLDFLAGS)
+
+## at91sam9x25/interrupt
+#include_bsp_HEADERS += at91sam9x25/irq/irq.h
+
+noinst_PROGRAMS += at91sam9x25/irq.rel
+at91sam9x25_irq_rel_SOURCES = at91sam9x25/csp_int.c \
+    at91sam9x25/csp_int.h
+at91sam9x25_irq_rel_CPPFLAGS = $(AM_CPPFLAGS)
+at91sam9x25_irq_rel_LDFLAGS = $(RTEMS_RELLDFLAGS)
+endif
+
 if mc9328mxl
 include_HEADERS = mc9328mxl/include/mc9328mxl.h
 

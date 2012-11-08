@@ -60,7 +60,20 @@
 *                                   SAM9X25 FAMILY DEVICE MEMBER DEFINITION
 *********************************************************************************************************
 */
+#define  CPU_REG_PIT_MR                (*((CPU_REG32 *)(0xFFFFFE30U)))    /* (PIT) Mode Register */
+#define  CPU_REG_PIT_SR                (*((CPU_REG32 *)(0xFFFFFE34U)))    /* (PIT) Status Register */
+#define  CPU_REG_PIT_PIVR              (*((CPU_REG32 *)(0xFFFFFE38U)))    /* (PIT) Periodic Interval Value Register */
+#define  CPU_REG_PIT_PIIR              (*((CPU_REG32 *)(0xFFFFFE3CU)))    /* (PIT) Periodic Interval Image Register */
 
+                                                                /* --------- PIT MODE REGISTER BIT DEFINES ---------- */
+
+#define  CPU_REG_PIT_MR_PIV_VAL_MASK                      DEF_BIT_FIELD(20, 0)
+                                                                /* Period interval timer enable                       */
+#define  CPU_REG_PIT_MR_PITEN                             DEF_BIT_24
+                                                              /* Period interval timer interrupt enable             */
+#define  CPU_REG_PIT_MR_PITIEN                            DEF_BIT_25
+                                                          /* --------- PIT STATUS REGISTER BIT DEFINES -------- */
+#define  CPU_REG_PIT_SR_PITS                              DEF_BIT_00
 
 /*
 *********************************************************************************************************
