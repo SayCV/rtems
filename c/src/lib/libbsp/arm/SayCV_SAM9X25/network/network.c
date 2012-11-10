@@ -5,10 +5,7 @@
 
 #include <rtems.h>
 #include <rtems/rtems_bsdnet.h>
-#include <at91sam9x25.h>
-#include <at91sam9x25_emac.h>
-#include <at91sam9x25_gpio.h>
-#include <at91sam9x25_pmc.h>
+#include <csp.h>
 
 #include <stdio.h>
 #include <string.h>
