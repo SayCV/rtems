@@ -5,7 +5,11 @@
 
 #include <rtems.h>
 #include <rtems/rtems_bsdnet.h>
-#include <csp.h>
+#include <at91sam9x5.h>
+#include <at91_aic.h>
+#include <at91_emac.h>
+#include <at91_gpio.h>
+#include <at91_pmc.h>
 
 #include <stdio.h>
 #include <string.h>
@@ -64,7 +68,7 @@
 #endif
 
   /* interrupt stuff */
-  #define EMAC_INT_PRIORITY       0       /* lowest priority */
+  #define AT91_EMAC_IxR_PRIORITY       0       /* lowest priority */
 
   /*  RTEMS event used by interrupt handler to start receive daemon. */
   #define START_RECEIVE_EVENT  RTEMS_EVENT_1
@@ -205,7 +209,8 @@ static int at91sam9x25_emac_ioctl (struct ifnet *ifp,
  */
 uint32_t phyread(uint8_t reg)
 {
-  EMAC_REG(EMAC_MAN) = (0x01 << 30  /* Start of Frame Delimiter */
+	at91_emac_t	*emac		= (at91_emac_t *) AT91_BASE_EMAC0;
+  emac->man = (0x01 << 30  /* Start of Frame Delimiter */
             | 0x02 << 28            /* Operation, 0x01 = Write, 0x02 = Read */
             | 0x00 << 23            /* Phy Number, 0 as we only have one */
             | reg << 18             /* Phy Register */
@@ -218,11 +223,11 @@ uint32_t phyread(uint8_t reg)
     printk(
       "EMAC: Phy 0, Reg %d, Read 0x%04lx.\n",
        reg,
-       (EMAC_REG(EMAC_MAN) & 0xffff)
+       (emac->man & 0xffff)
     );
   #endif
 
-  return EMAC_REG(EMAC_MAN) & 0xffff;
+  return emac->man & 0xffff;
 }
 
 /*
@@ -230,7 +235,8 @@ uint32_t phyread(uint8_t reg)
  */
 void phywrite(uint8_t reg, uint16_t data)
 {
-  EMAC_REG(EMAC_MAN) = (0x01 << 30 /* Start of Frame Delimiter */
+	at91_emac_t	*emac		= (at91_emac_t *) AT91_BASE_EMAC0;
+  emac->man = (0x01 << 30 /* Start of Frame Delimiter */
              | 0x01 << 28          /* Operation, 0x01 = Write, 0x02 = Read */
              | 0x00 << 23          /* Phy Number, BCM5221 is address 0 */
              | reg << 18           /* Phy Register */
@@ -346,6 +352,7 @@ int rtems_at91sam9x25_emac_attach (
 
 void at91sam9x25_emac_init(void *arg)
 {
+	at91_emac_t	*emac		= (at91_emac_t *) AT91_BASE_EMAC0;
     at91sam9x25_emac_softc_t     *sc = arg;
     struct ifnet *ifp = &sc->arpcom.ac_if;
 
@@ -369,7 +376,7 @@ void at91sam9x25_emac_init(void *arg)
     } /* if txDaemonTid */
 
     /* set our priority in the AIC */
-    AIC_SMR_REG(AIC_SMR_EMAC) = AIC_SMR_PRIOR(EMAC_INT_PRIORITY);
+    AT91_AIC_SMR(AT91SAM9X5_ID_EMAC0) = (0);
 
     /* install the interrupt handler */
     BSP_install_rtems_irq_handler(&at91sam9x25_emac_isr_data);
@@ -386,20 +393,21 @@ void at91sam9x25_emac_init(void *arg)
     ifp->if_flags |= IFF_RUNNING;
 
     /* Enable TX/RX and clear the statistics counters */
-    EMAC_REG(EMAC_CTL) = (EMAC_CTL_TE | EMAC_CTL_RE | EMAC_CTL_CSR);
+    emac->ctl = (AT91_EMAC_CTL_TE | AT91_EMAC_CTL_RE | AT91_EMAC_CTL_CSR);
 
     /* clear any pending interrupts */
-    EMAC_REG(EMAC_TSR) = 0xffffffff;
-    EMAC_REG(EMAC_RSR) = 0xffffffff;
+    emac->tsr = 0xffffffff;
+    emac->rsr = 0xffffffff;
 
 } /* at91sam9x25_emac_init() */
 
 void  at91sam9x25_emac_init_hw(at91sam9x25_emac_softc_t *sc)
 {
+	at91_emac_t	*emac		= (at91_emac_t *) AT91_BASE_EMAC0;
     int i;
 
     /* Configure shared pins for Ethernet, not GPIO */
-    PIOA_REG(PIO_PDR) = ( BIT7  |   /* tx clock      */
+    pio->pdr = ( BIT7  |   /* tx clock      */
                           BIT8  |   /* tx enable     */
                           BIT9  |   /* tx data 0     */
                           BIT10 |   /* tx data 1     */
@@ -454,7 +462,7 @@ void  at91sam9x25_emac_init_hw(at91sam9x25_emac_softc_t *sc)
     EMAC_REG(EMAC_CFG) = (EMAC_CFG_CLK_64 | EMAC_CFG_BIG | EMAC_CFG_FD);
 
     /* enable the MII interface */
-    EMAC_REG(EMAC_CTL) = EMAC_CTL_MPE;
+    EMAC_REG(AT91_EMAC_CTL) = AT91_EMAC_CTL_MPE;
 
     #if csb637
     {
@@ -537,7 +545,7 @@ void  at91sam9x25_emac_init_hw(at91sam9x25_emac_softc_t *sc)
     #endif
 
     #if 0
-    EMAC_REG(EMAC_MAN) = (0x01 << 30 |   /* Start of Frame Delimiter */
+    emac->man = (0x01 << 30 |   /* Start of Frame Delimiter */
                           0x01 << 28 |   /* Operation, 0x01 = Write */
                           0x00 << 23 |   /* Phy Number */
                           0x14 << 18 |   /* Phy Register */
@@ -564,7 +572,7 @@ void at91sam9x25_emac_stop (at91sam9x25_emac_softc_t *sc)
     /*
      * Stop the transmitter and receiver.
      */
-    EMAC_REG(EMAC_CTL) &= ~(EMAC_CTL_TE | EMAC_CTL_RE);
+    EMAC_REG(AT91_EMAC_CTL) &= ~(AT91_EMAC_CTL_TE | AT91_EMAC_CTL_RE);
 }
 
 /*
@@ -580,7 +588,7 @@ void at91sam9x25_emac_txDaemon (void *arg)
     for (;;)
     {
         /* turn on TX interrupt, then wait for one */
-        EMAC_REG(EMAC_IER) = EMAC_INT_TCOM;     /* Transmit complete */
+        EMAC_REG(EMAC_IER) = AT91_EMAC_IxR_TCOM;     /* Transmit complete */
 
         rtems_bsdnet_event_receive(
             START_TRANSMIT_EVENT,
@@ -656,9 +664,9 @@ void at91sam9x25_emac_rxDaemon(void *arg)
     /* Input packet handling loop */
     for (;;) {
         /* turn on RX interrupts, then wait for one */
-        EMAC_REG(EMAC_IER) = (EMAC_INT_RCOM |   /* Receive complete */
-                              EMAC_INT_RBNA |   /* Receive buf not available */
-                              EMAC_INT_ROVR);   /* Receive overrun */
+        EMAC_REG(EMAC_IER) = (AT91_EMAC_IxR_RCOM |   /* Receive complete */
+                              AT91_EMAC_IxR_RBNA |   /* Receive buf not available */
+                              AT91_EMAC_IxR_ROVR);   /* Receive overrun */
 
         rtems_bsdnet_event_receive(
             START_RECEIVE_EVENT,
@@ -760,11 +768,11 @@ void at91sam9x25_emac_stats (at91sam9x25_emac_softc_t *sc)
 static void at91sam9x25_emac_isr_on(const rtems_irq_connect_data *unused)
 {
     /* Enable various TX/RX interrupts */
-    EMAC_REG(EMAC_IER) = (EMAC_INT_RCOM | /* Receive complete */
-                          EMAC_INT_RBNA | /* Receive buffer not available */
-                          EMAC_INT_TCOM | /* Transmit complete */
-                          EMAC_INT_ROVR | /* Receive overrun */
-                          EMAC_INT_ABT);  /* Abort on DMA transfer */
+    EMAC_REG(EMAC_IER) = (AT91_EMAC_IxR_RCOM | /* Receive complete */
+                          AT91_EMAC_IxR_RBNA | /* Receive buffer not available */
+                          AT91_EMAC_IxR_TCOM | /* Transmit complete */
+                          AT91_EMAC_IxR_ROVR | /* Receive overrun */
+                          AT91_EMAC_IxR_ABT);  /* Abort on DMA transfer */
 
     return;
 }
@@ -842,27 +850,27 @@ static void at91sam9x25_emac_isr (rtems_irq_hdl_param unused)
     /* get the ISR status and determine RX or TX */
     status32 = EMAC_REG(EMAC_ISR);
 
-    if (status32 & EMAC_INT_ABT) {
-        EMAC_REG(EMAC_IDR) = EMAC_INT_ABT; /* disable it */
+    if (status32 & AT91_EMAC_IxR_ABT) {
+        EMAC_REG(EMAC_IDR) = AT91_EMAC_IxR_ABT; /* disable it */
         rtems_panic("at91sam9x25 Ethernet MAC has received an Abort.\n");
     }
 
-    if (status32 & (EMAC_INT_RCOM |    /* Receive complete */
-                    EMAC_INT_RBNA |    /* Receive buffer not available */
-                    EMAC_INT_ROVR)) {  /* Receive overrun */
+    if (status32 & (AT91_EMAC_IxR_RCOM |    /* Receive complete */
+                    AT91_EMAC_IxR_RBNA |    /* Receive buffer not available */
+                    AT91_EMAC_IxR_ROVR)) {  /* Receive overrun */
 
         /* disable the RX interrupts */
-        EMAC_REG(EMAC_IDR) = (EMAC_INT_RCOM |  /* Receive complete */
-                              EMAC_INT_RBNA |  /* Receive buf not available */
-                              EMAC_INT_ROVR);  /* Receive overrun */
+        EMAC_REG(EMAC_IDR) = (AT91_EMAC_IxR_RCOM |  /* Receive complete */
+                              AT91_EMAC_IxR_RBNA |  /* Receive buf not available */
+                              AT91_EMAC_IxR_ROVR);  /* Receive overrun */
 
         rtems_bsdnet_event_send (softc.rxDaemonTid, START_RECEIVE_EVENT);
     }
 
-    if (status32 & EMAC_INT_TCOM) {      /* Transmit buffer register empty */
+    if (status32 & AT91_EMAC_IxR_TCOM) {      /* Transmit buffer register empty */
 
         /* disable the TX interrupts */
-        EMAC_REG(EMAC_IDR) = EMAC_INT_TCOM;
+        EMAC_REG(EMAC_IDR) = AT91_EMAC_IxR_TCOM;
 
         rtems_bsdnet_event_send (softc.txDaemonTid, START_TRANSMIT_EVENT);
     }
