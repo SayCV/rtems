@@ -203,6 +203,10 @@ PREINSTALL_FILES += $(PROJECT_INCLUDE)/at91_clk.h
 $(PROJECT_INCLUDE)/at_hdmac.h: at91sam9x25/include/at_hdmac.h $(PROJECT_INCLUDE)/$(dirstamp)
 	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/at_hdmac.h
 PREINSTALL_FILES += $(PROJECT_INCLUDE)/at_hdmac.h
+
+$(PROJECT_INCLUDE)/bsp/irq.h: at91sam9x25/irq/irq.h $(PROJECT_INCLUDE)/bsp/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/bsp/irq.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/bsp/irq.h
 endif
 if mc9328mxl
 $(PROJECT_INCLUDE)/mc9328mxl.h: mc9328mxl/include/mc9328mxl.h $(PROJECT_INCLUDE)/$(dirstamp)
