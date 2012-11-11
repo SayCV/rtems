@@ -17,14 +17,14 @@
 #include <at91sam9x5.h>
 #include <at91_dbgu.h>
 #include <at91_pmc.h>
-
+#include <at91_io.h>
 
 static unsigned long cpu_clk_rate_hz;
 static unsigned long main_clk_rate_hz;
 static unsigned long mck_rate_hz;
 static unsigned long plla_rate_hz;
 static unsigned long pllb_rate_hz;
-static u32 at91_pllb_usb_init;
+static uint32_t at91_pllb_usb_init;
 
 unsigned long get_cpu_clk_rate(void)
 {
@@ -51,7 +51,7 @@ unsigned long get_pllb_clk_rate(void)
 	return pllb_rate_hz;
 }
 
-u32 get_pllb_init(void)
+uint32_t get_pllb_init(void)
 {
 	return at91_pllb_usb_init;
 }
@@ -130,7 +130,7 @@ fail:
 }
 #endif
 
-static u32 at91_pll_rate(u32 freq, u32 reg)
+static uint32_t at91_pll_rate(uint32_t freq, uint32_t reg)
 {
 	unsigned mul, div;
 
@@ -148,7 +148,7 @@ static u32 at91_pll_rate(u32 freq, u32 reg)
 int at91_clock_init(unsigned long main_clock)
 {
 	unsigned freq, mckr;
-	at91_pmc_t *pmc = (at91_pmc_t *) AT91_BASE_PMC;
+	at91_pmc_t *pmc = (at91_pmc_t *) AT91_PMC;
 #ifndef CONFIG_SYS_AT91_MAIN_CLOCK
 	unsigned tmp;
 	/*
@@ -159,7 +159,7 @@ int at91_clock_init(unsigned long main_clock)
 	 */
 	if (!main_clock) {
 		do {
-			tmp = readl(&pmc->mcfr);
+			tmp = at91_sys_read(&pmc->mcfr);
 		} while (!(tmp & AT91_PMC_MCFR_MAINRDY));
 		tmp &= AT91_PMC_MCFR_MAINF_MASK;
 		main_clock = tmp * (BSP_SLCK_FREQ / 16);
@@ -168,7 +168,7 @@ int at91_clock_init(unsigned long main_clock)
 	main_clk_rate_hz = main_clock;
 
 	/* report if PLLA is more than mildly overclocked */
-	plla_rate_hz = at91_pll_rate(main_clock, readl(&pmc->pllar));
+	plla_rate_hz = at91_pll_rate(main_clock, at91_sys_read(&pmc->pllar));
 
 #ifdef CONFIG_USB_ATMEL
 	/*
@@ -186,7 +186,7 @@ int at91_clock_init(unsigned long main_clock)
 	 * MCK and CPU derive from one of those primary clocks.
 	 * For now, assume this parentage won't change.
 	 */
-	mckr = readl(&pmc->mckr);
+	mckr = at91_sys_read(&pmc->mckr);
 #if defined(CONFIG_AT91SAM9G45) || defined(CONFIG_AT91SAM9M10G45) \
 		|| defined(CONFIG_AT91SAM9X5)
 	/* plla divisor by 2 */

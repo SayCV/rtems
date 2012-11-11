@@ -2,7 +2,7 @@
  *  AT91SAM9X25 ethernet driver
  *
  */
-
+#if 0
 #include <rtems.h>
 #include <rtems/rtems_bsdnet.h>
 #include <at91sam9x5.h>
@@ -83,7 +83,7 @@ static int at91sam9x25_emac_isr_is_on(const rtems_irq_connect_data *irq);
 
 /* Replace the first value with the clock's interrupt name. */
 rtems_irq_connect_data at91sam9x25_emac_isr_data = {
-    at91sam9x25_INT_EMAC,
+    AT91SAM9X5_ID_EMAC0,
     at91sam9x25_emac_isr,
     NULL,
     at91sam9x25_emac_isr_on,
@@ -209,7 +209,7 @@ static int at91sam9x25_emac_ioctl (struct ifnet *ifp,
  */
 uint32_t phyread(uint8_t reg)
 {
-	at91_emac_t	*emac		= (at91_emac_t *) AT91_BASE_EMAC0;
+	at91_emac_t	*emac		= (at91_emac_t *) AT91_EMAC0_BASE;
   emac->man = (0x01 << 30  /* Start of Frame Delimiter */
             | 0x02 << 28            /* Operation, 0x01 = Write, 0x02 = Read */
             | 0x00 << 23            /* Phy Number, 0 as we only have one */
@@ -235,7 +235,7 @@ uint32_t phyread(uint8_t reg)
  */
 void phywrite(uint8_t reg, uint16_t data)
 {
-	at91_emac_t	*emac		= (at91_emac_t *) AT91_BASE_EMAC0;
+	at91_emac_t	*emac		= (at91_emac_t *) AT91_EMAC0_BASE;
   emac->man = (0x01 << 30 /* Start of Frame Delimiter */
              | 0x01 << 28          /* Operation, 0x01 = Write, 0x02 = Read */
              | 0x00 << 23          /* Phy Number, BCM5221 is address 0 */
@@ -352,7 +352,7 @@ int rtems_at91sam9x25_emac_attach (
 
 void at91sam9x25_emac_init(void *arg)
 {
-	at91_emac_t	*emac		= (at91_emac_t *) AT91_BASE_EMAC0;
+	at91_emac_t	*emac		= (at91_emac_t *) AT91_EMAC0_BASE;
     at91sam9x25_emac_softc_t     *sc = arg;
     struct ifnet *ifp = &sc->arpcom.ac_if;
 
@@ -403,7 +403,7 @@ void at91sam9x25_emac_init(void *arg)
 
 void  at91sam9x25_emac_init_hw(at91sam9x25_emac_softc_t *sc)
 {
-	at91_emac_t	*emac		= (at91_emac_t *) AT91_BASE_EMAC0;
+	at91_emac_t	*emac		= (at91_emac_t *) AT91_EMAC0_BASE;
     int i;
 
     /* Configure shared pins for Ethernet, not GPIO */
@@ -875,4 +875,4 @@ static void at91sam9x25_emac_isr (rtems_irq_hdl_param unused)
         rtems_bsdnet_event_send (softc.txDaemonTid, START_TRANSMIT_EVENT);
     }
 }
-
+#endif

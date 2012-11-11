@@ -16,7 +16,7 @@
 
 #include <at91sam9x5.h>
 #include <at91_aic.h>
-
+#include <at91_io.h>
 
 void bsp_interrupt_dispatch(void)
 {

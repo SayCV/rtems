@@ -18,10 +18,11 @@
 #include <bsp.h>
 #include <bsp/irq.h>
 #include <at91sam9x5.h>
+#include <at91_aic.h>
 #include <at91_pit.h>
 #include <at91_pmc.h>
 #include <at91_clk.h>
-
+#include <at91_io.h>
 
 static unsigned long pit_mr_reload;
 

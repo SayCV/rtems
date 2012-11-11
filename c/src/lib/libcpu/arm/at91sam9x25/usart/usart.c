@@ -123,7 +123,7 @@ static int usart_read_polled(int minor)
     return -1;
 
   /* if nothing ready return -1 */
-  if ( (usart->sr & AT91_US_RXRDY) == 0 )
+  if ( (usart->csr & AT91_US_RXRDY) == 0 )
     return -1;
 
   return usart->rhr;
@@ -142,7 +142,7 @@ static void usart_write_polled(int minor, char c)
     return;
 
   /* delay until TX empty */
-  while ( (usart->sr & AT91_US_TXEMPTY) == 0 )
+  while ( (usart->csr & AT91_US_TXEMPTY) == 0 )
     ;
 
   usart->thr = c;

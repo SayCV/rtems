@@ -134,7 +134,7 @@ endif
 
 libbsp_a_LIBADD += ../../../libcpu/@RTEMS_CPU@/shared/arm920.rel \
     ../../../libcpu/@RTEMS_CPU@/@RTEMS_CPU_MODEL@/clock.rel \
-    ../../../libcpu/@RTEMS_CPU@/@RTEMS_CPU_MODEL@/gpio.rel \  
+    ../../../libcpu/@RTEMS_CPU@/@RTEMS_CPU_MODEL@/gpio.rel \
     ../../../libcpu/@RTEMS_CPU@/@RTEMS_CPU_MODEL@/dbgu.rel \
     ../../../libcpu/@RTEMS_CPU@/@RTEMS_CPU_MODEL@/usart.rel \
     ../../../libcpu/@RTEMS_CPU@/@RTEMS_CPU_MODEL@/timer.rel \

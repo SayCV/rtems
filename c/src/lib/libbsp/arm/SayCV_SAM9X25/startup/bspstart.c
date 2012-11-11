@@ -18,8 +18,9 @@
 #include <bsp/irq-generic.h>
 #include <at91sam9x5.h>
 #include <at91_aic.h>
+#include <at91_pmc.h>
 #include <at91_clk.h>
-
+#include <at91_io.h>
 #include <at91_emac.h>
 
 
@@ -103,21 +104,21 @@ static void fix_mac_addr(void)
 #else
 	at91_emac_t *emac = (at91_emac_t *) AT91_EMAC0_BASE;
 
-	addr[0] = (emac->sh1l >>  0) & 0xff;
-  	addr[1] = (emac->sh1l >>  8) & 0xff;
-  	addr[2] = (emac->sh1l >> 16) & 0xff;
-  	addr[3] = (emac->sh1l >> 24) & 0xff;
-  	addr[4] = (emac->sh1h >>  0) & 0xff;
-  	addr[5] = (emac->sh1h >>  8) & 0xff;
+	addr[0] = (emac->hsl >>  0) & 0xff;
+  	addr[1] = (emac->hsl >>  8) & 0xff;
+  	addr[2] = (emac->hsl >> 16) & 0xff;
+  	addr[3] = (emac->hsl >> 24) & 0xff;
+  	addr[4] = (emac->hsh >>  0) & 0xff;
+  	addr[5] = (emac->hsh >>  8) & 0xff;
 
 	  /* Check which 3 bytes have Cogent's OUI */
   if ((addr[5] == 0x00) && (addr[4] == 0x23) && (addr[3] == 0x31)) {
-      emac->sh1l = ((addr[5] <<  0) |
+      emac->hsl = ((addr[5] <<  0) |
                              (addr[4] <<  8) |
                              (addr[3] << 16) |
                              (addr[2] << 24));
 
-      emac->sh1h = ((addr[1] <<  0) |
+      emac->hsh = ((addr[1] <<  0) |
                              (addr[0] <<  8));
   	}
 #endif

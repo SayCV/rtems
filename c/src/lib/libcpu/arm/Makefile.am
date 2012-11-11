@@ -176,7 +176,7 @@ at91sam9x25_pmc_rel_CPPFLAGS = $(AM_CPPFLAGS)
 at91sam9x25_pmc_rel_LDFLAGS = $(RTEMS_RELLDFLAGS)
 
 ## at91sam9x25/interrupt
-#include_bsp_HEADERS += at91sam9x25/irq/irq.h
+include_bsp_HEADERS += at91sam9x25/irq/irq.h
 
 noinst_PROGRAMS += at91sam9x25/irq.rel
 at91sam9x25_irq_rel_SOURCES = at91sam9x25/irq/irq.c \

@@ -38,79 +38,79 @@
 #ifndef __ASSEMBLY__
 
 typedef struct at91_port {
-	u32	per;		/* 0x00 PIO Enable Register */
-	u32	pdr;		/* 0x04 PIO Disable Register */
-	u32	psr;		/* 0x08 PIO Status Register */
-	u32	reserved0;
-	u32	oer;		/* 0x10 Output Enable Register */
-	u32	odr;		/* 0x14 Output Disable Registerr */
-	u32	osr;		/* 0x18 Output Status Register */
-	u32	reserved1;
-	u32	ifer;		/* 0x20 Input Filter Enable Register */
-	u32	ifdr;		/* 0x24 Input Filter Disable Register */
-	u32	ifsr;		/* 0x28 Input Filter Status Register */
-	u32	reserved2;
-	u32	sodr;		/* 0x30 Set Output Data Register */
-	u32	codr;		/* 0x34 Clear Output Data Register */
-	u32	odsr;		/* 0x38 Output Data Status Register */
-	u32	pdsr;		/* 0x3C Pin Data Status Register */
-	u32	ier;		/* 0x40 Interrupt Enable Register */
-	u32	idr;		/* 0x44 Interrupt Disable Register */
-	u32	imr;		/* 0x48 Interrupt Mask Register */
-	u32	isr;		/* 0x4C Interrupt Status Register */
-	u32	mder;		/* 0x50 Multi-driver Enable Register */
-	u32	mddr;		/* 0x54 Multi-driver Disable Register */
-	u32	mdsr;		/* 0x58 Multi-driver Status Register */
-	u32	reserved3;
-	u32	pudr;		/* 0x60 Pull-up Disable Register */
-	u32	puer;		/* 0x64 Pull-up Enable Register */
-	u32	pusr;		/* 0x68 Pad Pull-up Status Register */
-	u32	reserved4;
+	uint32_t	per;		/* 0x00 PIO Enable Register */
+	uint32_t	pdr;		/* 0x04 PIO Disable Register */
+	uint32_t	psr;		/* 0x08 PIO Status Register */
+	uint32_t	reserved0;
+	uint32_t	oer;		/* 0x10 Output Enable Register */
+	uint32_t	odr;		/* 0x14 Output Disable Registerr */
+	uint32_t	osr;		/* 0x18 Output Status Register */
+	uint32_t	reserved1;
+	uint32_t	ifer;		/* 0x20 Input Filter Enable Register */
+	uint32_t	ifdr;		/* 0x24 Input Filter Disable Register */
+	uint32_t	ifsr;		/* 0x28 Input Filter Status Register */
+	uint32_t	reserved2;
+	uint32_t	sodr;		/* 0x30 Set Output Data Register */
+	uint32_t	codr;		/* 0x34 Clear Output Data Register */
+	uint32_t	odsr;		/* 0x38 Output Data Status Register */
+	uint32_t	pdsr;		/* 0x3C Pin Data Status Register */
+	uint32_t	ier;		/* 0x40 Interrupt Enable Register */
+	uint32_t	idr;		/* 0x44 Interrupt Disable Register */
+	uint32_t	imr;		/* 0x48 Interrupt Mask Register */
+	uint32_t	isr;		/* 0x4C Interrupt Status Register */
+	uint32_t	mder;		/* 0x50 Multi-driver Enable Register */
+	uint32_t	mddr;		/* 0x54 Multi-driver Disable Register */
+	uint32_t	mdsr;		/* 0x58 Multi-driver Status Register */
+	uint32_t	reserved3;
+	uint32_t	pudr;		/* 0x60 Pull-up Disable Register */
+	uint32_t	puer;		/* 0x64 Pull-up Enable Register */
+	uint32_t	pusr;		/* 0x68 Pad Pull-up Status Register */
+	uint32_t	reserved4;
 #if defined(CONFIG_AT91SAM9X5)
-	u32 abcdsr1;	/* 0x70 Peripheral ABCD Select Register 1 */
+	uint32_t abcdsr1;	/* 0x70 Peripheral ABCD Select Register 1 */
 #else
-	u32	asr;		/* 0x70 Select A Register */
+	uint32_t	asr;		/* 0x70 Select A Register */
 #endif
 #if defined(CONFIG_AT91SAM9X5)
-	u32 abcdsr2;	/* 0x74 Peripheral ABCD Select Register 2 */
+	uint32_t abcdsr2;	/* 0x74 Peripheral ABCD Select Register 2 */
 #else
-	u32	bsr;		/* 0x74 Select B Register */
+	uint32_t	bsr;		/* 0x74 Select B Register */
 #endif
-	u32	absr;		/* 0x78 AB Select Status Register */
+	uint32_t	absr;		/* 0x78 AB Select Status Register */
 #if defined(CONFIG_AT91SAM9X5)
-	u32 reserved5;
-	u32 ifscdr;	/* 0x80 Input Filter Slow Clock Disable Register */
-	u32 ifscer;	/* 0x84 Input Filter Slow Clock Enable Register */
-	u32 ifscsr;	/* 0x88 Input Filter Slow Clock Status Register */
-	u32 scdr;	/* 0x8C Slow Clock Divider Debouncing Register */
-	u32 ppddr;	/* 0x90 Pad Pull-down Disable Register */
-	u32 ppder;	/* 0x94 Pad Pull-down Enable Register */
-	u32 ppdsr;	/* 0x98 Pad Pull-down Status Register */
-	u32 reserved6;	/*  */
+	uint32_t reserved5;
+	uint32_t ifscdr;	/* 0x80 Input Filter Slow Clock Disable Register */
+	uint32_t ifscer;	/* 0x84 Input Filter Slow Clock Enable Register */
+	uint32_t ifscsr;	/* 0x88 Input Filter Slow Clock Status Register */
+	uint32_t scdr;	/* 0x8C Slow Clock Divider Debouncing Register */
+	uint32_t ppddr;	/* 0x90 Pad Pull-down Disable Register */
+	uint32_t ppder;	/* 0x94 Pad Pull-down Enable Register */
+	uint32_t ppdsr;	/* 0x98 Pad Pull-down Status Register */
+	uint32_t reserved6;	/*  */
 #else
-	u32	reserved5[9];	/*  */
+	uint32_t	reserved5[9];	/*  */
 #endif
-	u32	ower;		/* 0xA0 Output Write Enable Register */
-	u32	owdr;		/* 0xA4 Output Write Disable Register */
-	u32	owsr;		/* OxA8 Output Write Status Register */
+	uint32_t	ower;		/* 0xA0 Output Write Enable Register */
+	uint32_t	owdr;		/* 0xA4 Output Write Disable Register */
+	uint32_t	owsr;		/* OxA8 Output Write Status Register */
 #if defined(CONFIG_AT91SAM9X5)
-	u32 reserved7;	/*  */
-	u32 aimer;	/* 0xB0 Additional Interrupt Modes Enable Register */
-	u32 aimdr;	/* 0xB4 Additional Interrupt Modes Disable Register */
-	u32 aimmr;	/* 0xB8 Additional Intterupt Modes Mask Register */
-	u32 reserved8;	/* */
-	u32 esr;		/* 0xC0 Edge Select Register */
-	u32 lsr;		/* 0xC4 Level Select Register */
-	u32 elsr;		/* 0xC8 Edge/Level Status Register */
-	u32 reserved9;	/* 0xCC */
-	u32 fellsr;	/* 0xD0 Falling Edge/Low Level Select Register */
-	u32 rehlsr;	/* 0xD4 Rising Edge/High Level Select Register */
-	u32 frlhsr;	/* 0xD8 Fall/Rise - Low/High Status Register */
-	u32 reserved10[9];	/* */
-	u32 schmitt;	/* 0x100 Schmitt Trigger Register */
-	u32 reserved11[63];
+	uint32_t reserved7;	/*  */
+	uint32_t aimer;	/* 0xB0 Additional Interrupt Modes Enable Register */
+	uint32_t aimdr;	/* 0xB4 Additional Interrupt Modes Disable Register */
+	uint32_t aimmr;	/* 0xB8 Additional Intterupt Modes Mask Register */
+	uint32_t reserved8;	/* */
+	uint32_t esr;		/* 0xC0 Edge Select Register */
+	uint32_t lsr;		/* 0xC4 Level Select Register */
+	uint32_t elsr;		/* 0xC8 Edge/Level Status Register */
+	uint32_t reserved9;	/* 0xCC */
+	uint32_t fellsr;	/* 0xD0 Falling Edge/Low Level Select Register */
+	uint32_t rehlsr;	/* 0xD4 Rising Edge/High Level Select Register */
+	uint32_t frlhsr;	/* 0xD8 Fall/Rise - Low/High Status Register */
+	uint32_t reserved10[9];	/* */
+	uint32_t schmitt;	/* 0x100 Schmitt Trigger Register */
+	uint32_t reserved11[63];
 #else
-	u32	reserved6[85];
+	uint32_t	reserved6[85];
 #endif
 } at91_port_t;
 

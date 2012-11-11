@@ -167,7 +167,7 @@ static void dbgu_init(int minor)
     dbgu->cr = (AT91_US_RSTSTA | AT91_US_RSTTX | AT91_US_RSTRX);
 
     /* Clear pending interrupts */
-    dbgu->idr = DBGU_INT_ALL;
+    dbgu->idr = 0xffffffff;
     dbgu->imr = 0;
 
     /* Set port to no parity, no loopback */

@@ -87,6 +87,123 @@ $(PROJECT_INCLUDE)/bsp/irq.h: at91rm9200/irq/irq.h $(PROJECT_INCLUDE)/bsp/$(dirs
 	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/bsp/irq.h
 PREINSTALL_FILES += $(PROJECT_INCLUDE)/bsp/irq.h
 endif
+if at91sam9x25
+$(PROJECT_INCLUDE)/at91sam9x5.h: at91sam9x25/include/at91sam9x5.h $(PROJECT_INCLUDE)/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/at91sam9x5.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/at91sam9x5.h
+
+$(PROJECT_INCLUDE)/at91sam9x5_matrix.h: at91sam9x25/include/at91sam9x5_matrix.h $(PROJECT_INCLUDE)/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/at91sam9x5_matrix.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/at91sam9x5_matrix.h
+
+$(PROJECT_INCLUDE)/at91_adc.h: at91sam9x25/include/at91_adc.h $(PROJECT_INCLUDE)/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/at91_adc.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/at91_adc.h
+
+$(PROJECT_INCLUDE)/at91_aic.h: at91sam9x25/include/at91_aic.h $(PROJECT_INCLUDE)/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/at91_aic.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/at91_aic.h
+
+$(PROJECT_INCLUDE)/at91_common.h: at91sam9x25/include/at91_common.h $(PROJECT_INCLUDE)/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/at91_common.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/at91_common.h
+
+$(PROJECT_INCLUDE)/at91_dbgu.h: at91sam9x25/include/at91_dbgu.h $(PROJECT_INCLUDE)/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/at91_dbgu.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/at91_dbgu.h
+
+$(PROJECT_INCLUDE)/at91_usart.h: at91sam9x25/include/at91_usart.h $(PROJECT_INCLUDE)/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/at91_usart.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/at91_usart.h
+
+$(PROJECT_INCLUDE)/at91_emac.h: at91sam9x25/include/at91_emac.h $(PROJECT_INCLUDE)/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/at91_emac.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/at91_emac.h
+
+$(PROJECT_INCLUDE)/at91_matrix.h: at91sam9x25/include/at91_matrix.h $(PROJECT_INCLUDE)/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/at91_matrix.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/at91_matrix.h
+
+$(PROJECT_INCLUDE)/at91_mc.h: at91sam9x25/include/at91_mc.h $(PROJECT_INCLUDE)/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/at91_mc.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/at91_mc.h
+
+$(PROJECT_INCLUDE)/at91_mci.h: at91sam9x25/include/at91_mci.h $(PROJECT_INCLUDE)/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/at91_mci.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/at91_mci.h
+
+$(PROJECT_INCLUDE)/at91_pdc.h: at91sam9x25/include/at91_pdc.h $(PROJECT_INCLUDE)/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/at91_pdc.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/at91_pdc.h
+
+$(PROJECT_INCLUDE)/at91_pio.h: at91sam9x25/include/at91_pio.h $(PROJECT_INCLUDE)/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/at91_pio.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/at91_pio.h
+
+$(PROJECT_INCLUDE)/at91_gpio.h: at91sam9x25/include/at91_gpio.h $(PROJECT_INCLUDE)/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/at91_gpio.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/at91_gpio.h
+
+$(PROJECT_INCLUDE)/at91_pit.h: at91sam9x25/include/at91_pit.h $(PROJECT_INCLUDE)/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/at91_pit.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/at91_pit.h
+
+$(PROJECT_INCLUDE)/at91_pmc.h: at91sam9x25/include/at91_pmc.h $(PROJECT_INCLUDE)/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/at91_pmc.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/at91_pmc.h
+
+$(PROJECT_INCLUDE)/at91_rstc.h: at91sam9x25/include/at91_rstc.h $(PROJECT_INCLUDE)/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/at91_rstc.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/at91_rstc.h
+
+$(PROJECT_INCLUDE)/at91_rtc.h: at91sam9x25/include/at91_rtc.h $(PROJECT_INCLUDE)/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/at91_rtc.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/at91_rtc.h
+
+$(PROJECT_INCLUDE)/at91_rtt.h: at91sam9x25/include/at91_rtt.h $(PROJECT_INCLUDE)/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/at91_rtt.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/at91_rtt.h
+
+$(PROJECT_INCLUDE)/at91_shdwc.h: at91sam9x25/include/at91_shdwc.h $(PROJECT_INCLUDE)/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/at91_shdwc.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/at91_shdwc.h
+
+$(PROJECT_INCLUDE)/at91_spi.h: at91sam9x25/include/at91_spi.h $(PROJECT_INCLUDE)/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/at91_spi.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/at91_spi.h
+
+$(PROJECT_INCLUDE)/at91_ssc.h: at91sam9x25/include/at91_ssc.h $(PROJECT_INCLUDE)/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/at91_ssc.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/at91_ssc.h
+
+$(PROJECT_INCLUDE)/at91_st.h: at91sam9x25/include/at91_st.h $(PROJECT_INCLUDE)/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/at91_st.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/at91_st.h
+
+$(PROJECT_INCLUDE)/at91_tc.h: at91sam9x25/include/at91_tc.h $(PROJECT_INCLUDE)/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/at91_tc.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/at91_tc.h
+
+$(PROJECT_INCLUDE)/at91_twi.h: at91sam9x25/include/at91_twi.h $(PROJECT_INCLUDE)/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/at91_twi.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/at91_twi.h
+
+$(PROJECT_INCLUDE)/at91_wdt.h: at91sam9x25/include/at91_wdt.h $(PROJECT_INCLUDE)/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/at91_wdt.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/at91_wdt.h
+
+$(PROJECT_INCLUDE)/at91_io.h: at91sam9x25/include/at91_io.h $(PROJECT_INCLUDE)/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/at91_io.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/at91_io.h
+
+$(PROJECT_INCLUDE)/at91_clk.h: at91sam9x25/include/at91_clk.h $(PROJECT_INCLUDE)/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/at91_clk.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/at91_clk.h
+
+$(PROJECT_INCLUDE)/at_hdmac.h: at91sam9x25/include/at_hdmac.h $(PROJECT_INCLUDE)/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/at_hdmac.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/at_hdmac.h
+endif
 if mc9328mxl
 $(PROJECT_INCLUDE)/mc9328mxl.h: mc9328mxl/include/mc9328mxl.h $(PROJECT_INCLUDE)/$(dirstamp)
 	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/mc9328mxl.h

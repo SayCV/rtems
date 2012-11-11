@@ -147,7 +147,7 @@ typedef struct {
   volatile uint32_t fidi;       /**< \brief (Usart Offset: 0x0040) FI DI Ratio Register */
   volatile uint32_t ner;        /**< \brief (Usart Offset: 0x0044) Number of Errors Register */
   volatile uint32_t reserved1[1];
-  volatile uint32_t if;         /**< \brief (Usart Offset: 0x004C) IrDA Filter Register */
+  volatile uint32_t ifr;         /**< \brief (Usart Offset: 0x004C) IrDA Filter Register */
   volatile uint32_t man;        /**< \brief (Usart Offset: 0x0050) Manchester Encoder Decoder Register */
   volatile uint32_t linmr;      /**< \brief (Usart Offset: 0x0054) LIN Mode Register */
   volatile uint32_t linir;      /**< \brief (Usart Offset: 0x0058) LIN Identifier Register */

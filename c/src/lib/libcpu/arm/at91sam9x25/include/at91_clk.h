@@ -25,7 +25,6 @@
 #ifndef __ASM_ARM_ARCH_CLK_H__
 #define __ASM_ARM_ARCH_CLK_H__
 
-#include <asm/arch/hardware.h>
 
 unsigned long get_cpu_clk_rate(void);
 unsigned long get_main_clk_rate(void);
