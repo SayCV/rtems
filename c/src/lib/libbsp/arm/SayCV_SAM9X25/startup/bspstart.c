@@ -20,6 +20,7 @@
 #include <at91_aic.h>
 #include <at91_pmc.h>
 #include <at91_clk.h>
+#include <at91_gpio.h>
 #include <at91_io.h>
 #include <at91_emac.h>
 
@@ -102,7 +103,7 @@ static void fix_mac_addr(void)
                              (addr[0] <<  8));
   }
 #else
-	at91_emac_t *emac = (at91_emac_t *) AT91_EMAC0_BASE;
+	at91_emac_t *emac = (at91_emac_t *) AT91_BASE_EMAC0;
 
 	addr[0] = (emac->hsl >>  0) & 0xff;
   	addr[1] = (emac->hsl >>  8) & 0xff;
@@ -140,7 +141,56 @@ static void fix_mac_addr(void)
  */
 void bsp_usart_init(void)
 {
-	at91_pmc_t *pmc = (at91_pmc_t *) AT91_PMC_BASE;
+	at91_pmc_t *pmc = (at91_pmc_t *) AT91_BASE_PMC;
+	
+	at91_set_A_periph(AT91_PIN_PA9, 0);			/* DRXD */
+	at91_set_A_periph(AT91_PIN_PA10, 1);		/* DTXD */
+
+	at91_set_A_periph(AT91_PIN_PA0, 1);		/* TXD0 */
+	at91_set_A_periph(AT91_PIN_PA1, 0);		/* RXD0 */
+
+	//if (pins & ATMEL_UART_RTS)
+	//	at91_set_A_periph(AT91_PIN_PA2, 0);	/* RTS0 */
+	//if (pins & ATMEL_UART_CTS)
+	//	at91_set_A_periph(AT91_PIN_PA3, 0);	/* CTS0 */
+
+	at91_set_A_periph(AT91_PIN_PA5, 1);		/* TXD1 */
+	at91_set_A_periph(AT91_PIN_PA6, 0);		/* RXD1 */
+
+	//if (pins & ATMEL_UART_RTS)
+	//	at91_set_C_periph(AT91_PIN_PC27, 0);	/* RTS1 */
+	//if (pins & ATMEL_UART_CTS)
+	//	at91_set_C_periph(AT91_PIN_PC28, 0);	/* CTS1 */
+
+	at91_set_A_periph(AT91_PIN_PA7, 1);		/* TXD2 */
+	at91_set_A_periph(AT91_PIN_PA8, 0);		/* RXD2 */
+
+	//if (pins & ATMEL_UART_RTS)
+	//	at91_set_B_periph(AT91_PIN_PB0, 0);	/* RTS2 */
+	//if (pins & ATMEL_UART_CTS)
+	//	at91_set_B_periph(AT91_PIN_PB1, 0);	/* CTS2 */
+
+	at91_set_B_periph(AT91_PIN_PC22, 1);		/* TXD3 */
+	at91_set_B_periph(AT91_PIN_PC23, 0);		/* RXD3 */
+
+	//if (pins & ATMEL_UART_RTS)
+	//	at91_set_B_periph(AT91_PIN_PC24, 0);	/* RTS3 */
+	//if (pins & ATMEL_UART_CTS)
+	//	at91_set_B_periph(AT91_PIN_PC25, 0);	/* CTS3 */
+#if 0
+	at91_set_C_periph(AT91_PIN_PC8, 1);		/* UTXD0 */
+	at91_set_C_periph(AT91_PIN_PC9, 0);		/* URXD0 */
+
+
+	at91_set_C_periph(AT91_PIN_PC16, 1);		/* UTXD1 */
+	at91_set_C_periph(AT91_PIN_PC17, 0);		/* URXD1 */
+#endif
+	pmc->pcer = (	AT91SAM9X5_ID_USART0	|
+					AT91SAM9X5_ID_USART1	|
+					AT91SAM9X5_ID_USART2	|
+					AT91SAM9X5_ID_USART3	);
+					//AT91SAM9X5_ID_UART0 	|
+					//AT91SAM9X5_ID_UART1 	);
 #if 0	
   /*
    * Configure shared pins for USARTs.
