@@ -15,6 +15,8 @@
 #ifndef AT91SAM9X5_H
 #define AT91SAM9X5_H
 
+#define CONFIG_AT91SAM9X5
+
 /*
  * Peripheral identifiers/interrupts.
  */
@@ -127,58 +129,16 @@
 #define AT91_USART3	AT91SAM9X5_BASE_US3
 
 /* FIXED */
-#define AT91_BASE_SPI0		0xf0000000
-#define AT91_BASE_SPI1		0xf0004000
-#define AT91_BASE_MCI0		0xf0008000
-#define AT91_BASE_MCI1		0xf000c000
-#define AT91_BASE_SSC		0xf0010000
-#define AT91_BASE_CAN0		0xf8000000
-#define AT91_BASE_CAN1		0xf8004000
-#define AT91_BASE_TCB0		0xf8008000
-#define AT91_BASE_TC0		0xf8008000
-#define AT91_BASE_TC1		0xf8008040
-#define AT91_BASE_TC2		0xf8008080
-#define AT91_BASE_TCB1		0xf800c000
-#define AT91_BASE_TC3		0xf800c000
-#define AT91_BASE_TC4		0xf800c040
-#define AT91_BASE_TC5		0xf800c080
-#define AT91_BASE_TWI0		0xf8010000
-#define AT91_BASE_TWI1		0xf8014000
-#define AT91_BASE_TWI2		0xf8018000
-#define AT91_BASE_USART0		0xf801c000
-#define AT91_BASE_USART1		0xf8020000
-#define AT91_BASE_USART2		0xf8024000
-#define AT91_BASE_USART3		0xf8028000
-#define AT91_BASE_EMAC0		0xf802c000
-#define AT91_BASE_EMAC1		0xf8030000
-#define AT91_BASE_PWMC		0xf8034000
-#define AT91_BASE_LCDC		0xf8038000
-#define AT91_BASE_UDPHS		0xf803c000
-#define AT91_BASE_UART0		0xf8040000
-#define AT91_BASE_UART1		0xf8044000
-#define AT91_BASE_ISI		0xf8048000
-#define AT91_BASE_ADC		0xf804c000
+#define AT91_EMAC0_BASE		0xf802c000
+#define AT91_EMAC1_BASE		0xf8030000
+#define AT91_SMC_BASE		0xffffea00
+#define AT91_MATRIX_BASE	0xffffde00
+#define AT91_PIO_BASE		0xfffff400
+#define AT91_PMC_BASE		0xfffffc00
+#define AT91_RSTC_BASE		0xfffffe00
+#define AT91_PIT_BASE		0xfffffe30
+#define AT91_WDT_BASE		0xfffffe40
 
-#define AT91_BASE_MATRIX	(0xffffde00)
-#define AT91_BASE_PMECC	(0xffffe000)
-#define AT91_BASE_PMERRLOC	(0xffffe600)
-#define AT91_BASE_DDRSDRC0	(0xffffe800)
-#define AT91_BASE_SMC	(0xffffea00)
-#define AT91_BASE_DMA0	(0xffffec00)
-#define AT91_BASE_DMA1	(0xffffee00)
-#define AT91_BASE_AIC	(0xfffff000)
-#define AT91_BASE_DBGU	(0xfffff200)
-#define AT91_BASE_PIOA	(0xfffff400)
-#define AT91_BASE_PIOB	(0xfffff600)
-#define AT91_BASE_PIOC	(0xfffff800)
-#define AT91_BASE_PIOD	(0xfffffa00)
-#define AT91_BASE_PMC	(0xfffffc00)
-#define AT91_BASE_RSTC	(0xfffffe00)
-#define AT91_BASE_SHDWC	(0xfffffe10)
-#define AT91_BASE_PIT	(0xfffffe30)
-#define AT91_BASE_WDT	(0xfffffe40)
-#define AT91_BASE_GPBR	(0xfffffe60)
-#define AT91_BASE_RTC	(0xfffffeb0)
 /* FIXED */
 
 /*

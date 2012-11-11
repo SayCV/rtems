@@ -16,7 +16,12 @@
 
 #include <bsp.h>
 #include <bsp/irq-generic.h>
-#include <csp.h>
+#include <at91sam9x5.h>
+#include <at91_aic.h>
+#include <at91_clk.h>
+
+#include <at91_emac.h>
+
 
 /* Function prototypes */
 extern void rtems_exception_init_mngt(void);
@@ -37,8 +42,11 @@ void bsp_usart_init(void);
 void bsp_start_default( void )
 {
   /* disable interrupts */
-  AIC_CTL_REG(AIC_IDCR) = 0xffffffff;
+  //AIC_CTL_REG(AIC_IDCR) = 0xffffffff;
+  at91_sys_write(AT91_AIC_IDCR, 0xffffffff);
 
+  at91_clock_init(BSP_MAIN_FREQ);
+	
   /*
    * Some versions of the bootloader have the MAC address
    * reversed. This fixes it, if necessary.
@@ -72,6 +80,7 @@ void bsp_start_default( void )
 static void fix_mac_addr(void)
 {
   uint8_t addr[6];
+#if 0
 
   /* Read the MAC address */
   addr[0] = (EMAC_REG(EMAC_SA1L) >>  0) & 0xff;
@@ -91,6 +100,27 @@ static void fix_mac_addr(void)
       EMAC_REG(EMAC_SA1H) = ((addr[1] <<  0) |
                              (addr[0] <<  8));
   }
+#else
+	at91_emac_t *emac = (at91_emac_t *) AT91_EMAC0_BASE;
+
+	addr[0] = (emac->sh1l >>  0) & 0xff;
+  	addr[1] = (emac->sh1l >>  8) & 0xff;
+  	addr[2] = (emac->sh1l >> 16) & 0xff;
+  	addr[3] = (emac->sh1l >> 24) & 0xff;
+  	addr[4] = (emac->sh1h >>  0) & 0xff;
+  	addr[5] = (emac->sh1h >>  8) & 0xff;
+
+	  /* Check which 3 bytes have Cogent's OUI */
+  if ((addr[5] == 0x00) && (addr[4] == 0x23) && (addr[3] == 0x31)) {
+      emac->sh1l = ((addr[5] <<  0) |
+                             (addr[4] <<  8) |
+                             (addr[3] << 16) |
+                             (addr[2] << 24));
+
+      emac->sh1h = ((addr[1] <<  0) |
+                             (addr[0] <<  8));
+  	}
+#endif
 }
 
 /*
@@ -109,6 +139,8 @@ static void fix_mac_addr(void)
  */
 void bsp_usart_init(void)
 {
+	at91_pmc_t *pmc = (at91_pmc_t *) AT91_PMC_BASE;
+#if 0	
   /*
    * Configure shared pins for USARTs.
    * Disables the PIO from controlling the corresponding pin.
@@ -153,6 +185,7 @@ void bsp_usart_init(void)
                          PMC_PCR_PID_US1 |   /* USART 1 Peripheral Clock */
                          PMC_PCR_PID_US2 |   /* USART 2 Peripheral Clock */ 
                          PMC_PCR_PID_US3 );  /* USART 3 Peripheral Clock */
+#endif
 } 
 
 /*

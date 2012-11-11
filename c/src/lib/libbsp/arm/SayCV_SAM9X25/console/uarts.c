@@ -23,7 +23,9 @@
 #include <termios.h>
 #include <rtems/bspIo.h>
 
-#include <csp.h>
+#include <at91sam9x5.h>
+#include <at91_dbgu.h>
+
 #include <libchip/serial.h>
 #include <libchip/sersupp.h>
 #include <bspopts.h>
@@ -98,7 +100,7 @@ console_tbl Console_Configuration_Ports[] = {
     0,                 /* ulMargin - NOT USED */
     0,                 /* ulHysteresis - NOT USED */
     NULL,              /* pDeviceParams */
-    DBGU_BASE,         /* ulCtrlPort1  - Pointer to DBGU regs */
+    AT91_BASE_DBGU,         /* ulCtrlPort1  - Pointer to DBGU regs */
     0,                 /* ulCtrlPort2  - NOT USED */
     0,                 /* ulDataPort  - NOT USED */
     NULL,              /* getRegister - NOT USED */
@@ -160,7 +162,7 @@ console_tbl Console_Configuration_Ports[] = {
     0,                 /* ulMargin - NOT USED */
     0,                 /* ulHysteresis - NOT USED */
     NULL,              /* pDeviceParams */
-    USART0_BASE,       /* ulCtrlPort1  - Pointer to USART 0 regs */
+    AT91_BASE_USART0,       /* ulCtrlPort1  - Pointer to USART 0 regs */
     0,                 /* ulCtrlPort2  - NOT USED */
     0,                 /* ulDataPort  - NOT USED */
     NULL,              /* getRegister - NOT USED */
@@ -181,7 +183,7 @@ console_tbl Console_Configuration_Ports[] = {
     0,                 /* ulMargin - NOT USED */
     0,                 /* ulHysteresis - NOT USED */
     NULL,              /* pDeviceParams */
-    USART1_BASE,       /* ulCtrlPort1  - Pointer to USART 1 regs */
+    AT91_BASE_USART1,       /* ulCtrlPort1  - Pointer to USART 1 regs */
     0,                 /* ulCtrlPort2  - NOT USED */
     0,                 /* ulDataPort  - NOT USED */
     NULL,              /* getRegister - NOT USED */
@@ -202,7 +204,7 @@ console_tbl Console_Configuration_Ports[] = {
     0,                 /* ulMargin - NOT USED */
     0,                 /* ulHysteresis - NOT USED */
     NULL,              /* pDeviceParams */
-    USART2_BASE,       /* ulCtrlPort1  - Pointer to USART 2 regs */
+    AT91_BASE_USART2,       /* ulCtrlPort1  - Pointer to USART 2 regs */
     0,                 /* ulCtrlPort2  - NOT USED */
     0,                 /* ulDataPort  - NOT USED */
     NULL,              /* getRegister - NOT USED */
@@ -223,7 +225,7 @@ console_tbl Console_Configuration_Ports[] = {
     0,                 /* ulMargin - NOT USED */
     0,                 /* ulHysteresis - NOT USED */
     NULL,              /* pDeviceParams */
-    USART3_BASE,       /* ulCtrlPort1  - Pointer to USART 3 regs */
+    AT91_BASE_USART3,       /* ulCtrlPort1  - Pointer to USART 3 regs */
     0,                 /* ulCtrlPort2  - NOT USED */
     0,                 /* ulDataPort  - NOT USED */
     NULL,              /* getRegister - NOT USED */

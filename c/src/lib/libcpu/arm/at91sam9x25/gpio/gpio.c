@@ -24,17 +24,21 @@
  * MA 02111-1307 USA
  */
 
-#include <config.h>
-#include <common.h>
-#include <asm/sizes.h>
-#include <asm/arch/hardware.h>
-#include <asm/arch/io.h>
-#include <asm/arch/at91_pio.h>
+#include <bsp.h>
+#include <rtems/libio.h>
+#include <termios.h>
+
+#include <at91sam9x5.h>
+#include <at91_aic.h>
+#include <at91_pmc.h>
+#include <at91_pio.h>
+
+#include <rtems/bspIo.h>
 
 int at91_set_pio_pullup(unsigned port, unsigned pin, int use_pullup)
 {
 	at91_pio_t	*pio 	= (at91_pio_t *) AT91_PIO_BASE;
-	u32		mask;
+	uint32_t		mask;
 
 	if ((port < AT91_PIO_PORTS) && (pin < 32)) {
 		mask = 1 << pin;
@@ -53,7 +57,7 @@ int at91_set_pio_pullup(unsigned port, unsigned pin, int use_pullup)
 int at91_set_pio_periph(unsigned port, unsigned pin, int use_pullup)
 {
 	at91_pio_t	*pio 	= (at91_pio_t *) AT91_PIO_BASE;
-	u32		mask;
+	uint32_t		mask;
 
 	if ((port < AT91_PIO_PORTS) && (pin < 32)) {
 		mask = 1 << pin;
@@ -70,7 +74,7 @@ int at91_set_pio_periph(unsigned port, unsigned pin, int use_pullup)
 int at91_set_a_periph(unsigned port, unsigned pin, int use_pullup)
 {
 	at91_pio_t	*pio 	= (at91_pio_t *) AT91_PIO_BASE;
-	u32		mask;
+	uint32_t		mask;
 
 	if ((port < AT91_PIO_PORTS) && (pin < 32)) {
 		mask = 1 << pin;
@@ -95,7 +99,7 @@ int at91_set_a_periph(unsigned port, unsigned pin, int use_pullup)
 int at91_set_b_periph(unsigned port, unsigned pin, int use_pullup)
 {
 	at91_pio_t	*pio 	= (at91_pio_t *) AT91_PIO_BASE;
-	u32		mask;
+	uint32_t		mask;
 
 	if ((port < AT91_PIO_PORTS) && (pin < 32)) {
 		mask = 1 << pin;
@@ -121,7 +125,7 @@ int at91_set_b_periph(unsigned port, unsigned pin, int use_pullup)
 int at91_set_c_periph(unsigned port, unsigned pin, int use_pullup)
 {
 	at91_pio_t	*pio	= (at91_pio_t *) AT91_PIO_BASE;
-	u32		mask;
+	uint32_t		mask;
 
 	if ((port < AT91_PIO_PORTS) && (pin < 32)) {
 		mask = 1 << pin;
@@ -142,7 +146,7 @@ int at91_set_c_periph(unsigned port, unsigned pin, int use_pullup)
 int at91_set_d_periph(unsigned port, unsigned pin, int use_pullup)
 {
 	at91_pio_t	*pio	= (at91_pio_t *) AT91_PIO_BASE;
-	u32		mask;
+	uint32_t		mask;
 
 	if ((port < AT91_PIO_PORTS) && (pin < 32)) {
 		mask = 1 << pin;
@@ -162,10 +166,10 @@ int at91_set_d_periph(unsigned port, unsigned pin, int use_pullup)
  * mux the pin to the gpio controller (instead of "A" or "B" peripheral), and
  * configure it for an input.
  */
-int at91_set_pio_input(unsigned port, u32 pin, int use_pullup)
+int at91_set_pio_input(unsigned port, uint32_t pin, int use_pullup)
 {
 	at91_pio_t	*pio 	= (at91_pio_t *) AT91_PIO_BASE;
-	u32		mask;
+	uint32_t		mask;
 
 	if ((port < AT91_PIO_PORTS) && (pin < 32)) {
 		mask = 1 << pin;
@@ -181,10 +185,10 @@ int at91_set_pio_input(unsigned port, u32 pin, int use_pullup)
  * mux the pin to the gpio controller (instead of "A" or "B" peripheral),
  * and configure it for an output.
  */
-int at91_set_pio_output(unsigned port, u32 pin, int value)
+int at91_set_pio_output(unsigned port, uint32_t pin, int value)
 {
 	at91_pio_t	*pio 	= (at91_pio_t *) AT91_PIO_BASE;
-	u32		mask;
+	uint32_t		mask;
 
 	if ((port < AT91_PIO_PORTS) && (pin < 32)) {
 		mask = 1 << pin;
@@ -206,7 +210,7 @@ int at91_set_pio_output(unsigned port, u32 pin, int value)
 int at91_set_pio_deglitch(unsigned port, unsigned pin, int is_on)
 {
 	at91_pio_t	*pio 	= (at91_pio_t *) AT91_PIO_BASE;
-	u32		mask;
+	uint32_t		mask;
 
 	if ((port < AT91_PIO_PORTS) && (pin < 32)) {
 		mask = 1 << pin;
@@ -228,7 +232,7 @@ int at91_set_pio_deglitch(unsigned port, unsigned pin, int is_on)
 int at91_set_pio_debounce(unsigned port, unsigned pin, int is_on, int div)
 {
 	at91_pio_t	*pio	= (at91_pio_t *) AT91_PIO_BASE;
-	u32		mask;
+	uint32_t		mask;
 
 	if ((port < AT91_PIO_PORTS) && (pin < 32)) {
 		mask = 1 << pin;
@@ -249,7 +253,7 @@ int at91_set_pio_debounce(unsigned port, unsigned pin, int is_on, int div)
 int at91_set_pio_pulldown(unsigned port, unsigned pin, int is_on)
 {
 	at91_pio_t	*pio	= (at91_pio_t *) AT91_PIO_BASE;
-	u32		mask;
+	uint32_t		mask;
 
 	if ((port < AT91_PIO_PORTS) && (pin < 32)) {
 		mask = 1 << pin;
@@ -268,7 +272,7 @@ int at91_set_pio_pulldown(unsigned port, unsigned pin, int is_on)
 int at91_set_pio_disable_schmitt_trig(unsigned port, unsigned pin)
 {
 	at91_pio_t	*pio	= (at91_pio_t *) AT91_PIO_BASE;
-	u32		mask;
+	uint32_t		mask;
 
 	if ((port < AT91_PIO_PORTS) && (pin < 32)) {
 		mask = 1 << pin;
@@ -286,7 +290,7 @@ int at91_set_pio_disable_schmitt_trig(unsigned port, unsigned pin)
 int at91_set_pio_multi_drive(unsigned port, unsigned pin, int is_on)
 {
 	at91_pio_t	*pio	= (at91_pio_t *) AT91_PIO_BASE;
-	u32		mask;
+	uint32_t		mask;
 
 	if ((port < AT91_PIO_PORTS) && (pin < 32)) {
 		mask = 1 << pin;
@@ -304,7 +308,7 @@ int at91_set_pio_multi_drive(unsigned port, unsigned pin, int is_on)
 int at91_set_pio_value(unsigned port, unsigned pin, int value)
 {
 	at91_pio_t	*pio	= (at91_pio_t *) AT91_PIO_BASE;
-	u32		mask;
+	uint32_t		mask;
 
 	if ((port < AT91_PIO_PORTS) && (pin < 32)) {
 		mask = 1 << pin;
@@ -321,9 +325,9 @@ int at91_set_pio_value(unsigned port, unsigned pin, int value)
  */
 int at91_get_pio_value(unsigned port, unsigned pin)
 {
-	u32		pdsr	= 0;
+	uint32_t		pdsr	= 0;
 	at91_pio_t	*pio 	= (at91_pio_t *) AT91_PIO_BASE;
-	u32		mask;
+	uint32_t		mask;
 
 	if ((port < AT91_PIO_PORTS) && (pin < 32)) {
 		mask = 1 << pin;

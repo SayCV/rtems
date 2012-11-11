@@ -109,42 +109,69 @@ endif
 
 if at91sam9x25
 include_HEADERS = 
-include_HEADERS += at91sam9x25/csp.h
-include_HEADERS += at91sam9x25/csp_types.h 
-include_HEADERS += at91sam9x25/csp_dev.h
-include_HEADERS += at91sam9x25/csp_grp.h 
-include_HEADERS += at91sam9x25/csp_pmc.h
-include_HEADERS += at91sam9x25/csp_usart.h
-include_HEADERS += at91sam9x25/csp_emac.h 
+include_HEADERS += at91sam9x25/include/at91sam9x5.h
+include_HEADERS += at91sam9x25/include/at91sam9x5_matrix.h
+include_HEADERS += at91sam9x25/include/at91_adc.h
+include_HEADERS += at91sam9x25/include/at91_aic.h
+include_HEADERS += at91sam9x25/include/at91_common.h
+include_HEADERS += at91sam9x25/include/at91_dbgu.h
+include_HEADERS += at91sam9x25/include/at91_usart.h
+include_HEADERS += at91sam9x25/include/at91_emac.h
+include_HEADERS += at91sam9x25/include/at91_matrix.h
+include_HEADERS += at91sam9x25/include/at91_mc.h
+include_HEADERS += at91sam9x25/include/at91_mci.h
+include_HEADERS += at91sam9x25/include/at91_pdc.h
+include_HEADERS += at91sam9x25/include/at91_pio.h
+include_HEADERS += at91sam9x25/include/at91_gpio.h
+include_HEADERS += at91sam9x25/include/at91_pit.h
+include_HEADERS += at91sam9x25/include/at91_pmc.h
+include_HEADERS += at91sam9x25/include/at91_rstc.h
+include_HEADERS += at91sam9x25/include/at91_rtc.h
+include_HEADERS += at91sam9x25/include/at91_rtt.h
+include_HEADERS += at91sam9x25/include/at91_shdwc.h
+include_HEADERS += at91sam9x25/include/at91_spi.h
+include_HEADERS += at91sam9x25/include/at91_ssc.h
+include_HEADERS += at91sam9x25/include/at91_st.h
+include_HEADERS += at91sam9x25/include/at91_tc.h
+include_HEADERS += at91sam9x25/include/at91_twi.h
+include_HEADERS += at91sam9x25/include/at91_wdt.h
+include_HEADERS += at91sam9x25/include/at91_io.h
+include_HEADERS += at91sam9x25/include/at91_clk.h
+include_HEADERS += at91sam9x25/include/at_hdmac.h
 
 ## at91sam9x25 clock
 noinst_PROGRAMS += at91sam9x25/clock.rel
-at91sam9x25_clock_rel_SOURCES = at91sam9x25/csp_clock.c
-at91sam9x25_clock_rel_SOURCES += at91sam9x25/csp.c
+at91sam9x25_clock_rel_SOURCES = at91sam9x25/clock/clock.c
 at91sam9x25_clock_rel_CPPFLAGS = $(AM_CPPFLAGS)
 at91sam9x25_clock_rel_LDFLAGS = $(RTEMS_RELLDFLAGS)
 
+## at91sam9x25/gpio
+noinst_PROGRAMS += at91sam9x25/gpio.rel
+at91sam9x25_gpio_rel_SOURCES = at91sam9x25/gpio/gpio.c
+at91sam9x25_gpio_rel_CPPFLAGS = $(AM_CPPFLAGS)
+at91sam9x25_gpio_rel_LDFLAGS = $(RTEMS_RELLDFLAGS)
+
 ## at91sam9x25/dbgu
 noinst_PROGRAMS += at91sam9x25/dbgu.rel
-at91sam9x25_dbgu_rel_SOURCES = at91sam9x25/csp_dbgu.c
+at91sam9x25_dbgu_rel_SOURCES = at91sam9x25/dbgu/dbgu.c
 at91sam9x25_dbgu_rel_CPPFLAGS = $(AM_CPPFLAGS)
 at91sam9x25_dbgu_rel_LDFLAGS = $(RTEMS_RELLDFLAGS)
 
 ## at91sam9x25/usart
 noinst_PROGRAMS += at91sam9x25/usart.rel
-at91sam9x25_usart_rel_SOURCES = at91sam9x25/csp_usart.c
+at91sam9x25_usart_rel_SOURCES = at91sam9x25/usart/usart.c
 at91sam9x25_usart_rel_CPPFLAGS = $(AM_CPPFLAGS)
 at91sam9x25_usart_rel_LDFLAGS = $(RTEMS_RELLDFLAGS)
 
 ## at91sam9x25/timer
 noinst_PROGRAMS += at91sam9x25/timer.rel
-at91sam9x25_timer_rel_SOURCES = at91sam9x25/csp_timer.c
+at91sam9x25_timer_rel_SOURCES = at91sam9x25/timer/timer.c
 at91sam9x25_timer_rel_CPPFLAGS = $(AM_CPPFLAGS)
 at91sam9x25_timer_rel_LDFLAGS = $(RTEMS_RELLDFLAGS)
 
 ## at91sam9x25/pmc
 noinst_PROGRAMS += at91sam9x25/pmc.rel
-at91sam9x25_pmc_rel_SOURCES = at91sam9x25/csp_pmc.c
+at91sam9x25_pmc_rel_SOURCES = at91sam9x25/pmc/pmc.c
 at91sam9x25_pmc_rel_CPPFLAGS = $(AM_CPPFLAGS)
 at91sam9x25_pmc_rel_LDFLAGS = $(RTEMS_RELLDFLAGS)
 
@@ -152,8 +179,8 @@ at91sam9x25_pmc_rel_LDFLAGS = $(RTEMS_RELLDFLAGS)
 #include_bsp_HEADERS += at91sam9x25/irq/irq.h
 
 noinst_PROGRAMS += at91sam9x25/irq.rel
-at91sam9x25_irq_rel_SOURCES = at91sam9x25/csp_int.c \
-    at91sam9x25/csp_int.h
+at91sam9x25_irq_rel_SOURCES = at91sam9x25/irq/irq.c \
+    at91sam9x25/irq.h
 at91sam9x25_irq_rel_CPPFLAGS = $(AM_CPPFLAGS)
 at91sam9x25_irq_rel_LDFLAGS = $(RTEMS_RELLDFLAGS)
 endif

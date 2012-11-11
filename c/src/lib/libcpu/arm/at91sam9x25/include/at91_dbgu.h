@@ -63,4 +63,21 @@
 #define		AT91_CIDR_NVPTYP	(7    << 28)		/* Nonvolatile Program Memory Type */
 #define		AT91_CIDR_EXT		(1    << 31)		/* Extension Flag */
 
+typedef struct {
+    volatile uint32_t cr;
+    volatile uint32_t mr;
+    volatile uint32_t ier;
+    volatile uint32_t idr;
+    volatile uint32_t imr;
+    volatile uint32_t sr;
+    volatile uint32_t rhr;
+    volatile uint32_t thr;
+    volatile uint32_t brgr;
+    volatile uint32_t _res0[7];
+    volatile uint32_t cidr;
+    volatile uint32_t exid;
+    volatile uint32_t fnr;
+} at91_dbgu_t;
+
+
 #endif
