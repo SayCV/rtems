@@ -18,6 +18,78 @@
 #include <at91_aic.h>
 #include <at91_io.h>
 
+/*
+*********************************************************************************************************
+*                                           EXCEPTION DEFINES
+*********************************************************************************************************
+*/
+
+                                                 /* ARM exception IDs                                  */
+#define  CPU_RELOCATE_ARM_EXCEPT_RESET                                                                    0x00
+#define  CPU_RELOCATE_ARM_EXCEPT_UNDEF_INSTR                                                              0x01
+#define  CPU_RELOCATE_ARM_EXCEPT_SWI                                                                      0x02
+#define  CPU_RELOCATE_ARM_EXCEPT_PREFETCH_ABORT                                                           0x03
+#define  CPU_RELOCATE_ARM_EXCEPT_DATA_ABORT                                                               0x04
+#define  CPU_RELOCATE_ARM_EXCEPT_ADDR_ABORT                                                               0x05
+#define  CPU_RELOCATE_ARM_EXCEPT_IRQ                                                                      0x06
+#define  CPU_RELOCATE_ARM_EXCEPT_FIQ                                                                      0x07
+#define  CPU_RELOCATE_ARM_EXCEPT_NBR                                                                      0x08
+                                                 /* ARM exception vectors addresses                    */
+#define  CPU_RELOCATE_ARM_EXCEPT_RESET_VECT_ADDR              (CPU_RELOCATE_ARM_EXCEPT_RESET          * 0x04 + 0x00)
+#define  CPU_RELOCATE_ARM_EXCEPT_UNDEF_INSTR_VECT_ADDR        (CPU_RELOCATE_ARM_EXCEPT_UNDEF_INSTR    * 0x04 + 0x00)
+#define  CPU_RELOCATE_ARM_EXCEPT_SWI_VECT_ADDR                (CPU_RELOCATE_ARM_EXCEPT_SWI            * 0x04 + 0x00)
+#define  CPU_RELOCATE_ARM_EXCEPT_PREFETCH_ABORT_VECT_ADDR     (CPU_RELOCATE_ARM_EXCEPT_PREFETCH_ABORT * 0x04 + 0x00)
+#define  CPU_RELOCATE_ARM_EXCEPT_DATA_ABORT_VECT_ADDR         (CPU_RELOCATE_ARM_EXCEPT_DATA_ABORT     * 0x04 + 0x00)
+#define  CPU_RELOCATE_ARM_EXCEPT_ADDR_ABORT_VECT_ADDR         (CPU_RELOCATE_ARM_EXCEPT_ADDR_ABORT     * 0x04 + 0x00)
+#define  CPU_RELOCATE_ARM_EXCEPT_IRQ_VECT_ADDR                (CPU_RELOCATE_ARM_EXCEPT_IRQ            * 0x04 + 0x00)
+#define  CPU_RELOCATE_ARM_EXCEPT_FIQ_VECT_ADDR                (CPU_RELOCATE_ARM_EXCEPT_FIQ            * 0x04 + 0x00)
+
+                                                 /* ARM exception handlers addresses                   */
+#define  CPU_RELOCATE_ARM_EXCEPT_RESET_HANDLER_ADDR           (CPU_RELOCATE_ARM_EXCEPT_RESET          * 0x04 + 0x20)
+#define  CPU_RELOCATE_ARM_EXCEPT_UNDEF_INSTR_HANDLER_ADDR     (CPU_RELOCATE_ARM_EXCEPT_UNDEF_INSTR    * 0x04 + 0x20)
+#define  CPU_RELOCATE_ARM_EXCEPT_SWI_HANDLER_ADDR             (CPU_RELOCATE_ARM_EXCEPT_SWI            * 0x04 + 0x20)
+#define  CPU_RELOCATE_ARM_EXCEPT_PREFETCH_ABORT_HANDLER_ADDR  (CPU_RELOCATE_ARM_EXCEPT_PREFETCH_ABORT * 0x04 + 0x20)
+#define  CPU_RELOCATE_ARM_EXCEPT_DATA_ABORT_HANDLER_ADDR      (CPU_RELOCATE_ARM_EXCEPT_DATA_ABORT     * 0x04 + 0x20)
+#define  CPU_RELOCATE_ARM_EXCEPT_ADDR_ABORT_HANDLER_ADDR      (CPU_RELOCATE_ARM_EXCEPT_ADDR_ABORT     * 0x04 + 0x20)
+#define  CPU_RELOCATE_ARM_EXCEPT_IRQ_HANDLER_ADDR             (CPU_RELOCATE_ARM_EXCEPT_IRQ            * 0x04 + 0x20)
+#define  CPU_RELOCATE_ARM_EXCEPT_FIQ_HANDLER_ADDR             (CPU_RELOCATE_ARM_EXCEPT_FIQ            * 0x04 + 0x20)
+
+                                                 /* ARM "Jump To Self" asm instruction                 */
+#define  CPU_RELOCATE_ARM_INSTR_JUMP_TO_SELF                   0xEAFFFFFE
+                                                 /* ARM "Jump To Exception Handler" asm instruction    */
+#define  CPU_RELOCATE_ARM_INSTR_JUMP_TO_HANDLER                0xE59FF018
+
+void       Undefined_Handler   (void);
+void       SWI_Handler          (void);
+void       Prefetch_Handler(void);
+void       Abort_Handler    (void);
+//void       not_used    (void);
+void       IRQ_Handler          (void);
+void       FIQ_Handler          (void);
+
+void  CPU_Relocate_InitExceptVect (void)
+{
+    (*(unsigned int *)CPU_RELOCATE_ARM_EXCEPT_UNDEF_INSTR_VECT_ADDR)       =         CPU_RELOCATE_ARM_INSTR_JUMP_TO_HANDLER;
+    (*(unsigned int *)CPU_RELOCATE_ARM_EXCEPT_UNDEF_INSTR_HANDLER_ADDR)    = (unsigned int)Undefined_Handler;
+
+    (*(unsigned int *)CPU_RELOCATE_ARM_EXCEPT_SWI_VECT_ADDR)               =         CPU_RELOCATE_ARM_INSTR_JUMP_TO_HANDLER;
+    (*(unsigned int *)CPU_RELOCATE_ARM_EXCEPT_SWI_HANDLER_ADDR)            = (unsigned int)SWI_Handler;
+
+    (*(unsigned int *)CPU_RELOCATE_ARM_EXCEPT_PREFETCH_ABORT_VECT_ADDR)    =         CPU_RELOCATE_ARM_INSTR_JUMP_TO_HANDLER;
+    (*(unsigned int *)CPU_RELOCATE_ARM_EXCEPT_PREFETCH_ABORT_HANDLER_ADDR) = (unsigned int)Prefetch_Handler;
+
+    (*(unsigned int *)CPU_RELOCATE_ARM_EXCEPT_DATA_ABORT_VECT_ADDR)        =         CPU_RELOCATE_ARM_INSTR_JUMP_TO_HANDLER;
+    (*(unsigned int *)CPU_RELOCATE_ARM_EXCEPT_DATA_ABORT_HANDLER_ADDR)     = (unsigned int)Abort_Handler;
+
+    (*(unsigned int *)CPU_RELOCATE_ARM_EXCEPT_ADDR_ABORT_VECT_ADDR)        =         CPU_RELOCATE_ARM_INSTR_JUMP_TO_HANDLER;
+    (*(unsigned int *)CPU_RELOCATE_ARM_EXCEPT_ADDR_ABORT_HANDLER_ADDR)     = (unsigned int)CPU_RELOCATE_ARM_INSTR_JUMP_TO_SELF;
+
+    (*(unsigned int *)CPU_RELOCATE_ARM_EXCEPT_IRQ_VECT_ADDR)               =         CPU_RELOCATE_ARM_INSTR_JUMP_TO_HANDLER;
+    (*(unsigned int *)CPU_RELOCATE_ARM_EXCEPT_IRQ_HANDLER_ADDR)            = (unsigned int)IRQ_Handler;
+
+    (*(unsigned int *)CPU_RELOCATE_ARM_EXCEPT_FIQ_VECT_ADDR)               =         CPU_RELOCATE_ARM_INSTR_JUMP_TO_HANDLER;
+    (*(unsigned int *)CPU_RELOCATE_ARM_EXCEPT_FIQ_HANDLER_ADDR)            = (unsigned int)FIQ_Handler;
+}
 void bsp_interrupt_dispatch(void)
 {
   rtems_vector_number vector = at91_sys_read(AT91_AIC_IVR);//AIC_CTL_REG(AIC_IVR);
@@ -53,6 +125,8 @@ rtems_status_code bsp_interrupt_facility_initialize(void)
   at91_sys_write(AT91_AIC_IDCR, 0xffffffff);//AIC_CTL_REG(AIC_IDCR) = 0xffffffff;
 
   _CPU_ISR_install_vector(ARM_EXCEPTION_IRQ, arm_exc_interrupt, NULL);
-
+	
+	CPU_Relocate_InitExceptVect();
+	
   return RTEMS_SUCCESSFUL;
 }
