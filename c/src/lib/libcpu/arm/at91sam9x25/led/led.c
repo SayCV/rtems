@@ -27,7 +27,39 @@
 #define	CONFIG_RED_LED		AT91_PIN_PD31	/* this is the user1 led */
 #define	CONFIG_GREEN_LED	AT91_PIN_PC4	/* this is the user2 led */
 
-#define	CFG_LED_NBR_00	AT91_PIN_PD31
+/* PC4 */
+#define	BSP_BRDCPU_LED_PIN_NBR_01		        DEF_BIT_04
+/*
+*********************************************************************************************************
+* 
+* PA27 WARNNING
+* PA29 FA
+*********************************************************************************************************
+*/
+#define	BSP_BRDCPU_LED_PIN_NBR_02		        DEF_BIT_27
+#define	BSP_BRDCPU_LED_PIN_NBR_03		        DEF_BIT_29
+
+/*
+*********************************************************************************************************
+* 
+* CANTXD                    PA5
+* CANRXD                    PA6
+* USARTTXD                  PA10
+* USARTRXD                  PA9
+*********************************************************************************************************
+*/
+#define	BSP_BRDCPU_LED_PIN_NBR_04		        DEF_BIT_05
+#define	BSP_BRDCPU_LED_PIN_NBR_05		        DEF_BIT_06
+#define	BSP_BRDCPU_LED_PIN_NBR_06		        DEF_BIT_10
+#define	BSP_BRDCPU_LED_PIN_NBR_07		        DEF_BIT_09
+
+#define	CFG_LED_NBR_01	AT91_PIN_PC04
+#define	CFG_LED_NBR_02	AT91_PIN_PA27
+#define	CFG_LED_NBR_03	AT91_PIN_PA29
+#define	CFG_LED_NBR_04	AT91_PIN_PA05
+#define	CFG_LED_NBR_05	AT91_PIN_PA06
+#define	CFG_LED_NBR_06	AT91_PIN_PA10
+#define	CFG_LED_NBR_07	AT91_PIN_PA09
 
 void red_LED_on(void)
 {
