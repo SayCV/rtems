@@ -78,7 +78,7 @@
 /* enable debugging of the EMAC code */
 /* #define EMAC_DBG */
 
-#if 1
+#if defined(CONFIG_AT91SAM9X5)
   /* Bit defines for the PHY Status Register #1 (phy address 0x01) */
   /* 1 = PHY able to perform 100BASE-T4 */
   #define PHY_STAT_100BASE_T4     0x1<<15

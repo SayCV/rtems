@@ -25,14 +25,14 @@ extern "C" {
 #define BSP_FEATURE_IRQ_EXTENSION
 
 /* What is the input clock freq in hertz? */
-#define BSP_MAIN_FREQ		12000000		/* 3.6864 MHz */
+#define BSP_MAIN_FREQ		12000000		/* 12 MHz */
 #define BSP_SLCK_FREQ		32768				/* 32.768 KHz */
 
 /* What is the last interrupt? */
 #define BSP_MAX_INT AT91SAM9X25_MAX_INT
 
 console_tbl *BSP_get_uart_from_minor(int minor);
-static inline int32_t BSP_get_baud(void) {return 38400;}
+static inline int32_t BSP_get_baud(void) {return 115200;}
 
 //#define ST_PIMR_PIV	33	/* 33 ticks of the 32.768Khz clock ~= 1msec */
 

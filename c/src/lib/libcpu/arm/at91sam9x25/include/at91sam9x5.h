@@ -15,8 +15,8 @@
 #ifndef AT91SAM9X5_H
 #define AT91SAM9X5_H
 
-#define CONFIG_AT91SAM9X5
-#define CONFIG_AT91_LEGACY
+#define CONFIG_AT91SAM9X5 1
+#define CONFIG_AT91_LEGACY 1
 
 /*
  * Peripheral identifiers/interrupts.
