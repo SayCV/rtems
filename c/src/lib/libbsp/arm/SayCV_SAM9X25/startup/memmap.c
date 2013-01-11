@@ -38,8 +38,8 @@ mmu_sect_map_t mem_map[] = {
     {0x40000000, 0x40000000,   1,    MMU_CACHE_NONE},     /* Expansion CS0 */
     {0x50000000, 0x50000000,   1,    MMU_CACHE_NONE},     /* CF CE 1 */
     {0x60000000, 0x60000000,   1,    MMU_CACHE_NONE},     /* CF CE 1 */
-    {0x70000000, 0x70000000,   1,    MMU_CACHE_NONE},     /* CF CE 2 */
-    {0x80000000, 0x80000000,   1,    MMU_CACHE_NONE},     /* Expansion CS0 */
+    //{0x70000000, 0x70000000,   1,    MMU_CACHE_NONE},     /* CF CE 2 */
+    //{0x80000000, 0x80000000,   1,    MMU_CACHE_NONE},     /* Expansion CS0 */
     {0xfff00000, 0xfff00000,   1,    MMU_CACHE_NONE},     /* Internal regs */
     {0x00000000, 0x00000000,   0,    0}                   /* The end */
 };

@@ -126,7 +126,7 @@ rtems_status_code bsp_interrupt_facility_initialize(void)
 
   _CPU_ISR_install_vector(ARM_EXCEPTION_IRQ, arm_exc_interrupt, NULL);
 	
-	CPU_Relocate_InitExceptVect();
+	//CPU_Relocate_InitExceptVect();
 	
   return RTEMS_SUCCESSFUL;
 }
