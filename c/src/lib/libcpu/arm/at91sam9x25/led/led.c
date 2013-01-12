@@ -71,3 +71,29 @@ void red_LED_off(void)
 	at91_set_gpio_value(CONFIG_RED_LED, 0);
 }
 
+void CSP_LED_NBR_on(uint32_t led_nbr)
+{
+	at91_set_gpio_value(led_nbr, 1);
+}
+
+void CSP_LED_NBR_off(uint32_t led_nbr)
+{
+	
+	at91_set_gpio_value(led_nbr, 0);
+}
+
+void CSP_LED_NBRS_on(uint32_t led_nbr)
+{
+	int i;
+	for(i=1; i<led_nbr;i++) {
+		at91_set_gpio_value(i, 1);
+	}
+}
+
+void CSP_LED_NBRS_off(uint32_t led_nbr)
+{
+	int i;
+	for(i=1; i<led_nbr;i++) {
+		at91_set_gpio_value(i, 0);
+	}
+}
