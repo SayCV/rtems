@@ -23,7 +23,7 @@
 #include <at91_gpio.h>
 #include <at91_io.h>
 #include <at91_emac.h>
-
+#include <led.h>
 
 /* Function prototypes */
 extern void rtems_exception_init_mngt(void);
@@ -46,15 +46,15 @@ void bsp_start_default( void )
   /* disable interrupts */
   //AIC_CTL_REG(AIC_IDCR) = 0xffffffff;
   at91_sys_write(AT91_AIC_IDCR, 0xffffffff);
-
+	CSP_LED_NBR_on(CFG_LED_NBR_01);
   at91_clock_init(BSP_MAIN_FREQ);
-	
+	CSP_LED_NBR_on(CFG_LED_NBR_02);
   /*
    * Some versions of the bootloader have the MAC address
    * reversed. This fixes it, if necessary.
    */
   fix_mac_addr();
-
+CSP_LED_NBR_on(CFG_LED_NBR_03);
   /*
    * Init rtems PIO configuration for USARTs
    */
@@ -105,22 +105,22 @@ static void fix_mac_addr(void)
 #else
 	at91_emac_t *emac = (at91_emac_t *) AT91_BASE_EMAC0;
 
-	addr[0] = (emac->hsl >>  0) & 0xff;
-  	addr[1] = (emac->hsl >>  8) & 0xff;
-  	addr[2] = (emac->hsl >> 16) & 0xff;
-  	addr[3] = (emac->hsl >> 24) & 0xff;
-  	addr[4] = (emac->hsh >>  0) & 0xff;
-  	addr[5] = (emac->hsh >>  8) & 0xff;
+	addr[0] = (readl(&emac->hsl) >>  0) & 0xff;
+  	addr[1] = (readl(&emac->hsl) >>  8) & 0xff;
+  	addr[2] = (readl(&emac->hsl) >> 16) & 0xff;
+  	addr[3] = (readl(&emac->hsl) >> 24) & 0xff;
+  	addr[4] = (readl(&emac->hsh) >>  0) & 0xff;
+  	addr[5] = (readl(&emac->hsh) >>  8) & 0xff;
 
 	  /* Check which 3 bytes have Cogent's OUI */
   if ((addr[5] == 0x00) && (addr[4] == 0x23) && (addr[3] == 0x31)) {
-      emac->hsl = ((addr[5] <<  0) |
+      writel(((addr[5] <<  0) |
                              (addr[4] <<  8) |
                              (addr[3] << 16) |
-                             (addr[2] << 24));
+                             (addr[2] << 24)), &emac->hsl);
 
-      emac->hsh = ((addr[1] <<  0) |
-                             (addr[0] <<  8));
+      writel(((addr[1] <<  0) |
+                             (addr[0] <<  8)), &emac->hsl);
   	}
 #endif
 }

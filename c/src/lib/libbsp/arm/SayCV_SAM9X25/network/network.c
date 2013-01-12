@@ -405,12 +405,12 @@ int rtems_at91sam9x25_emac_attach (
 
 
     /* get the MAC address from the chip */
-    softc.arpcom.ac_enaddr[0] = (readl(&emac->sh1l) >> 0) & 0xff;
-    softc.arpcom.ac_enaddr[1] = (readl(&emac->sh1l) >> 8) & 0xff;
-    softc.arpcom.ac_enaddr[2] = (readl(&emac->sh1l) >> 16) & 0xff;
-    softc.arpcom.ac_enaddr[3] = (readl(&emac->sh1l) >> 24) & 0xff;
-    softc.arpcom.ac_enaddr[4] = (readl(&emac->sa1h) >> 0) & 0xff;
-    softc.arpcom.ac_enaddr[5] = (readl(&emac->sa1h) >> 8) & 0xff;
+    softc.arpcom.ac_enaddr[0] = (readl(&emac->hsl) >> 0) & 0xff;
+    softc.arpcom.ac_enaddr[1] = (readl(&emac->hsl) >> 8) & 0xff;
+    softc.arpcom.ac_enaddr[2] = (readl(&emac->hsl) >> 16) & 0xff;
+    softc.arpcom.ac_enaddr[3] = (readl(&emac->hsl) >> 24) & 0xff;
+    softc.arpcom.ac_enaddr[4] = (readl(&emac->hsh) >> 0) & 0xff;
+    softc.arpcom.ac_enaddr[5] = (readl(&emac->hsh) >> 8) & 0xff;
 
     #if 0
       printk( "MAC=%02x:%02x:%02x:%02x:%02x:%02x\n",
