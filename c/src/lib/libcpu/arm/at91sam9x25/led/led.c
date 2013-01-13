@@ -53,6 +53,7 @@
 #define	BSP_BRDCPU_LED_PIN_NBR_06		        DEF_BIT_10
 #define	BSP_BRDCPU_LED_PIN_NBR_07		        DEF_BIT_09
 
+#if 0
 #define	CFG_LED_NBR_01	AT91_PIN_PC04
 #define	CFG_LED_NBR_02	AT91_PIN_PA27
 #define	CFG_LED_NBR_03	AT91_PIN_PA29
@@ -60,6 +61,7 @@
 #define	CFG_LED_NBR_05	AT91_PIN_PA06
 #define	CFG_LED_NBR_06	AT91_PIN_PA10
 #define	CFG_LED_NBR_07	AT91_PIN_PA09
+#endif
 
 void red_LED_on(void)
 {

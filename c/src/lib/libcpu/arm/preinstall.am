@@ -144,6 +144,10 @@ $(PROJECT_INCLUDE)/at91_gpio.h: at91sam9x25/include/at91_gpio.h $(PROJECT_INCLUD
 	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/at91_gpio.h
 PREINSTALL_FILES += $(PROJECT_INCLUDE)/at91_gpio.h
 
+$(PROJECT_INCLUDE)/led.h: at91sam9x25/include/led.h $(PROJECT_INCLUDE)/$(dirstamp)
+	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/led.h
+PREINSTALL_FILES += $(PROJECT_INCLUDE)/led.h
+
 $(PROJECT_INCLUDE)/at91_pit.h: at91sam9x25/include/at91_pit.h $(PROJECT_INCLUDE)/$(dirstamp)
 	$(INSTALL_DATA) $< $(PROJECT_INCLUDE)/at91_pit.h
 PREINSTALL_FILES += $(PROJECT_INCLUDE)/at91_pit.h
