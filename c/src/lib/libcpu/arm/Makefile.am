@@ -138,6 +138,7 @@ include_HEADERS += at91sam9x25/include/at91_wdt.h
 include_HEADERS += at91sam9x25/include/at91_io.h
 include_HEADERS += at91sam9x25/include/at91_clk.h
 include_HEADERS += at91sam9x25/include/at_hdmac.h
+include_HEADERS += at91sam9x25/include/led.h
 
 ## at91sam9x25 clock
 noinst_PROGRAMS += at91sam9x25/clock.rel
@@ -150,6 +151,12 @@ noinst_PROGRAMS += at91sam9x25/gpio.rel
 at91sam9x25_gpio_rel_SOURCES = at91sam9x25/gpio/gpio.c
 at91sam9x25_gpio_rel_CPPFLAGS = $(AM_CPPFLAGS)
 at91sam9x25_gpio_rel_LDFLAGS = $(RTEMS_RELLDFLAGS)
+
+## at91sam9x25/led
+noinst_PROGRAMS += at91sam9x25/led.rel
+at91sam9x25_led_rel_SOURCES = at91sam9x25/led/led.c
+at91sam9x25_led_rel_CPPFLAGS = $(AM_CPPFLAGS)
+at91sam9x25_led_rel_LDFLAGS = $(RTEMS_RELLDFLAGS)
 
 ## at91sam9x25/dbgu
 noinst_PROGRAMS += at91sam9x25/dbgu.rel
