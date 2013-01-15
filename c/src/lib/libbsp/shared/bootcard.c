@@ -75,6 +75,7 @@ uint32_t boot_card(
 {
   rtems_interrupt_level  bsp_isr_level;
   uint32_t               status = 0;
+  _BSP_put_char(b);
 printk("boot_card Start.\r\n");
   /*
    * Special case for PowerPC: The interrupt disable mask is stored in SPRG0.
@@ -91,6 +92,7 @@ printk("boot_card Start.\r\n");
 
   bsp_boot_cmdline = cmdline;
 printk("bsp_start Start.\r\n");
+_BSP_put_char(c);
   /*
    * Invoke Board Support Package initialization routine written in C.
    */

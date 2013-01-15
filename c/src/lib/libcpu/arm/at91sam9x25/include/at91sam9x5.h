@@ -17,6 +17,7 @@
 
 #define CONFIG_AT91SAM9X5 1
 #define CONFIG_AT91_LEGACY 1
+#define CONFIG_SYS_AT91_MAIN_CLOCK 1
 
 /*
  * Peripheral identifiers/interrupts.

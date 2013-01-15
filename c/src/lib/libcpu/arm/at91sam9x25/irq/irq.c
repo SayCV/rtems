@@ -118,11 +118,26 @@ rtems_status_code bsp_interrupt_facility_initialize(void)
   unsigned long i = 0;
 
   for (i = 0; i < 32; ++i) {
-    at91_sys_write(AT91_AIC_SVR(i<<2), i);//AIC_SVR_REG(i<<2) = i;
+    /* Put irq number in Source Vector Register: */
+		at91_sys_write(AT91_AIC_SVR(i), i);
+		/* Active Low interrupt, with the specified priority */
+		at91_sys_write(AT91_AIC_SMR(i), AT91_AIC_SRCTYPE_LOW);
+		/* Perform 8 End Of Interrupt Command to make sure AIC will not Lock out nIRQ */
+		if (i < 8)
+			at91_sys_write(AT91_AIC_EOICR, 0);
   }
+	/*
+	 * Spurious Interrupt ID in Spurious Vector Register is NR_AIC_IRQS
+	 * When there is no current interrupt, the IRQ Vector Register reads the value stored in AIC_SPU
+	 */
+	at91_sys_write(AT91_AIC_SPU, 32);
 
-  /* disable all interrupts */
-  at91_sys_write(AT91_AIC_IDCR, 0xffffffff);//AIC_CTL_REG(AIC_IDCR) = 0xffffffff;
+	/* No debugging in AIC: Debug (Protect) Control Register */
+	at91_sys_write(AT91_AIC_DCR, 0);
+
+	/* Disable and clear all interrupts initially */
+	at91_sys_write(AT91_AIC_IDCR, 0xFFFFFFFF);
+	at91_sys_write(AT91_AIC_ICCR, 0xFFFFFFFF);
 
   _CPU_ISR_install_vector(ARM_EXCEPTION_IRQ, arm_exc_interrupt, NULL);
 	
