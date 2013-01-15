@@ -95,7 +95,7 @@ void Clock_driver_support_initialize_hardware(void)
   mclk_freq = get_mck_clk_rate();
   //pit_mr_value = (((rtems_configuration_get_microseconds_per_tick() * slck) +
   //                    (1000000/2))/ 1000000);
-  pit_mr_value      = (mclk_freq) / 16 / rtems_configuration_get_microseconds_per_tick() - 1;			/* 1 ticks = 1000us */
+  pit_mr_value      = ((((uint64_t)(mclk_freq) / 16) * rtems_configuration_get_microseconds_per_tick() + (1000000/2))/ 1000000);			/* 1 ticks = 1000us */
   pit_mr_reload = pit_mr_value;
 
   /* read the status to clear the int */
@@ -129,6 +129,8 @@ uint32_t bsp_clock_nanoseconds_since_last_tick(void)
     \
     /* read the status to clear the int */ \
     pit_pivr_str = at91_sys_read(AT91_PIT_PIVR); \
+    /* clear  system interrupt */ \
+    at91_sys_write(AT91_AIC_ICCR, 1 << AT91_ID_SYS); \
   } while (0)
 
 void Clock_driver_support_shutdown_hardware( void )

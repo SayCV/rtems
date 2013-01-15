@@ -22,12 +22,14 @@
 #include <rtems.h>
 #include <bsp.h>
 #include <at91sam9x5.h>
+#include <at91_io.h>
 #include <at91_tc.h>
 #include <at91_pmc.h>
 #include <at91_clk.h>
 
 #define AT91SAM9X5_BASE_TC0		0xf8008000
-#define AT91_TC0 (AT91SAM9X5_BASE_TC0 - AT91_BASE_SYS)
+//#define AT91_TC0 (AT91SAM9X5_BASE_TC0 - AT91_BASE_SYS)
+#define AT91_TC0 AT91SAM9X5_BASE_TC0
 
 uint16_t tstart;
 bool benchmark_timer_find_average_overhead;
@@ -39,13 +41,14 @@ uint32_t tick_time;
  */
 void benchmark_timer_initialize( void )
 {
+    at91_tc_t *tc = (at91_tc_t *) AT91SAM9X5_BASE_TC0;
     uint32_t tmr_freq;
 
     /* since we are using timer_clock2, divide mck by 8 */
     tmr_freq = get_mck_clk_rate() / 8;
 
-	at91_sys_write(AT91_TC0 + AT91_TC_CMR, AT91_TC_TIMER_CLOCK2);
-	at91_sys_write(AT91_TC0 + AT91_TC_CCR, AT91_TC_CLKEN | AT91_TC_SWTRG);
+	writel(AT91_TC_TIMER_CLOCK2, &tc->cmr);
+	writel(AT91_TC_CLKEN | AT91_TC_SWTRG, &tc->ccr);
 	//TC_TC0_REG(TC_CMR) = TC_CMR_TCCLKS(1);   /* timer_clock2 */
     //TC_TC0_REG(TC_CCR) = (TC_CCR_CLKEN       /* enable the counter */
     //                      | TC_CCR_SWTRG);   /* start it up */
@@ -72,9 +75,10 @@ void benchmark_timer_initialize( void )
 
 int benchmark_timer_read( void )
 {
+  at91_tc_t *tc = (at91_tc_t *) AT91SAM9X5_BASE_TC0;
   uint16_t t;
   uint32_t total;
-  t = at91_sys_read(AT91_TC0 + AT91_TC_CV);//TC_TC0_REG(TC_CV);
+  t = readl(&tc->cv);//TC_TC0_REG(TC_CV);
 
   /*
    *  Total is calculated by taking into account the number of timer overflow

@@ -23,6 +23,9 @@
 .equ PSR_F,              0x40
 .equ PSR_T,              0x20
 
+.equ MMU_C1_M,       		0x0001  
+.equ MMU_C1_I,					0x1000  
+
 .text
 .globl  _start
 _start:
@@ -77,13 +80,23 @@ _bss_init:
         add     sp, sp, r1
         sub     sp, sp, #0x64
 
+        bl  CSP_RemapRam
+        
         /*
          * Initialize the MMU. After we return, the MMU is enabled,
          * and memory may be remapped. I hope we don't remap this
          * memory away.
          */
-        ldr     r0, =mem_map
-        bl      mmu_init
+        /*ldr     r0, =mem_map
+        bl      mmu_init*/
+        
+        /*shut down mmu*/
+        /* */
+    		MRC P15, 0, R0, C1, C0, 0  
+    		BIC R0, R0, #MMU_C1_M  
+    		ORR R0, R0, #MMU_C1_I  
+    		MCR P15, 0, R0, C1, C0, 0
+    		/**/
 
         /*
          * Initialize the exception vectors. This includes the

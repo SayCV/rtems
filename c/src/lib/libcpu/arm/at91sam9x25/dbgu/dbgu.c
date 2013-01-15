@@ -27,6 +27,9 @@
 #include <libchip/serial.h>
 #include <libchip/sersupp.h>
 
+#define __AT91_DBGU_NUM            1  
+static volatile int _gIsInitDbgu[__AT91_DBGU_NUM] = {0}; 
+
 volatile int dbg_dly;
 
 /* static function prototypes */
@@ -119,6 +122,9 @@ static ssize_t dbgu_write(int minor, const char *buf, size_t len)
     console_tbl *console_entry;
     at91_dbgu_t *dbgu;
 
+    if ((minor < __AT91_DBGU_NUM) && (0 == _gIsInitDbgu[minor]))  
+        dbgu_init(minor);  
+   
     console_entry = BSP_get_uart_from_minor(minor);
 
     if (console_entry == NULL) {
@@ -155,12 +161,16 @@ static void dbgu_init(int minor)
     console_tbl *console_entry;
     at91_dbgu_t *dbgu;
 
+    if ((minor >= __AT91_DBGU_NUM) || (_gIsInitDbgu[minor] > 0))  
+        return ;
+    
     console_entry = BSP_get_uart_from_minor(minor);
 
     if (console_entry == NULL) {
         return;
     }
-
+		_gIsInitDbgu[minor] = 1; 
+		
     dbgu = (at91_dbgu_t *)console_entry->ulCtrlPort1;
 
     /* Clear error bits, and reset */

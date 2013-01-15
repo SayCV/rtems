@@ -15,6 +15,7 @@
 #include <bsp.h>
 
 #include <at91sam9x5.h>
+#include <at91sam9x5_matrix.h>
 #include <at91_dbgu.h>
 #include <at91_pmc.h>
 #include <at91_io.h>
@@ -223,4 +224,45 @@ int at91_clock_init(unsigned long main_clock)
 	cpu_clk_rate_hz = freq;
 
 	return 0;
+}
+
+/** Frequency of the board main oscillator */
+#define BOARD_MAINOSC           12000000
+
+/** Master clock frequency (when using board_lowlevel.c) */
+#define BOARD_MCK                ((unsigned long)((BOARD_MAINOSC / 3 / 2 / 3) * 200 ))
+void CSP_Delay (volatile uint32_t num )
+{
+  volatile uint32_t us;
+  
+  for(; num > 0; num--) {
+    for( us = ( BOARD_MCK/100000000 ); us > 0; us--) {
+      asm("nop");
+    }
+  }
+}
+
+void udelay(unsigned int usecs)  
+{  
+    CSP_Delay(usecs); 
+}
+
+/**
+ * \brief Changes the mapping of the chip so that the remap area mirrors the
+ * internal ROM or the EBI CS0.
+ */
+void CSP_RemapRom( void )
+{
+    //CSP_MATRIX_REG->MATRIX_MRCR = 0;
+    at91_sys_write(AT91_MATRIX_MRCR, 0);
+}
+
+/**
+ * \brief Changes the mapping of the chip so that the remap area mirrors the
+ * internal RAM.
+ */
+void CSP_RemapRam( void )
+{
+    //CSP_MATRIX_REG->MATRIX_MRCR = CSP_MATRIX_MRCR_RCB0 | CSP_MATRIX_MRCR_RCB1;
+    at91_sys_write(AT91_MATRIX_MRCR, AT91_MATRIX_RCB0 | AT91_MATRIX_RCB1);
 }

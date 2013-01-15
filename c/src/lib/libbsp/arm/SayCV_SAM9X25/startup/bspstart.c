@@ -46,24 +46,26 @@ void bsp_start_default( void )
   /* disable interrupts */
   //AIC_CTL_REG(AIC_IDCR) = 0xffffffff;
   at91_sys_write(AT91_AIC_IDCR, 0xffffffff);
-	CSP_LED_NBR_on(CFG_LED_NBR_01);
-  at91_clock_init(BSP_MAIN_FREQ);
-	CSP_LED_NBR_on(CFG_LED_NBR_02);
+	//CSP_LED_NBR_on(CFG_LED_NBR_01);
+  //at91_clock_init(BSP_MAIN_FREQ);
+	//CSP_LED_NBR_on(CFG_LED_NBR_02);
   /*
    * Some versions of the bootloader have the MAC address
    * reversed. This fixes it, if necessary.
    */
   fix_mac_addr();
-CSP_LED_NBR_on(CFG_LED_NBR_03);
+//CSP_LED_NBR_on(CFG_LED_NBR_03);
   /*
    * Init rtems PIO configuration for USARTs
    */
   bsp_usart_init(); 
+  printk("Init Finshed. rtems PIO configuration for USARTs\r\n");
 
   /*
    * Init rtems exceptions management
    */
   rtems_exception_init_mngt();
+  printk("Init Finshed. rtems exceptions management\r\n");
 
   /*
    * Init rtems interrupt management

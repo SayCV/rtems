@@ -143,4 +143,20 @@
 #define AT91_TC_IDR		0x28		/* Interrupt Disable Register */
 #define AT91_TC_IMR		0x2c		/* Interrupt Mask Register */
 
+typedef struct {
+  volatile uint32_t      ccr;        /**< \brief (TcChannel Offset: 0x0) Channel Control Register */
+  volatile uint32_t      cmr;        /**< \brief (TcChannel Offset: 0x4) Channel Mode Register */
+  volatile uint32_t      reserved1[2];
+  volatile uint32_t      cv;         /**< \brief (TcChannel Offset: 0x10) Counter Value */
+  volatile uint32_t      ra;         /**< \brief (TcChannel Offset: 0x14) Register A */
+  volatile uint32_t      rb;         /**< \brief (TcChannel Offset: 0x18) Register B */
+  volatile uint32_t      rc;         /**< \brief (TcChannel Offset: 0x1C) Register C */
+  volatile uint32_t      sr;         /**< \brief (TcChannel Offset: 0x20) Status Register */
+  volatile uint32_t      ier;        /**< \brief (TcChannel Offset: 0x24) Interrupt Enable Register */
+  volatile uint32_t      idr;        /**< \brief (TcChannel Offset: 0x28) Interrupt Disable Register */
+  volatile uint32_t      imr;        /**< \brief (TcChannel Offset: 0x2C) Interrupt Mask Register */
+  volatile uint32_t      reserved2[4];
+} at91_tc_t;
+/** \brief Tc hardware registers */
+
 #endif
