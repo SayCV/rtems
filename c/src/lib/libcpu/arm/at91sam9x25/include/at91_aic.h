@@ -16,6 +16,32 @@
 #ifndef AT91_AIC_H
 #define AT91_AIC_H
 
+typedef struct {
+   uint32_t smr[32];   /**< \brief (aic offset: 0x00) source mode register */
+   uint32_t svr[32];   /**< \brief (aic offset: 0x80) source vector register */
+   uint32_t ivr;       /**< \brief (aic offset: 0x100) interrupt vector register */
+   uint32_t fvr;       /**< \brief (aic offset: 0x104) fiq interrupt vector register */
+   uint32_t isr;       /**< \brief (aic offset: 0x108) interrupt status register */
+   uint32_t ipr;       /**< \brief (aic offset: 0x10c) interrupt pending register */
+   uint32_t imr;       /**< \brief (aic offset: 0x110) interrupt mask register */
+   uint32_t cisr;      /**< \brief (aic offset: 0x114) core interrupt status register */
+   uint32_t reserved1[2];
+   uint32_t iecr;      /**< \brief (aic offset: 0x120) interrupt enable command register */
+   uint32_t idcr;      /**< \brief (aic offset: 0x124) interrupt disable command register */
+   uint32_t iccr;      /**< \brief (aic offset: 0x128) interrupt clear command register */
+   uint32_t iscr;      /**< \brief (aic offset: 0x12c) interrupt set command register */
+   uint32_t eoicr;     /**< \brief (aic offset: 0x130) end of interrupt command register */
+   uint32_t spu;       /**< \brief (aic offset: 0x134) spurious interrupt vector register */
+   uint32_t dcr;       /**< \brief (aic offset: 0x138) debug control register */
+   uint32_t reserved2[1];
+   uint32_t ffer;      /**< \brief (aic offset: 0x140) fast forcing enable register */
+   uint32_t ffdr;      /**< \brief (aic offset: 0x144) fast forcing disable register */
+   uint32_t ffsr;      /**< \brief (aic offset: 0x148) fast forcing status register */
+   uint32_t reserved3[38];
+   uint32_t wpmr;      /**< \brief (aic offset: 0x1e4) write protect mode register */
+   uint32_t wpsr;      /**< \brief (aic offset: 0x1e8) write protect status register */
+} at91_aic_t;
+
 #define AT91_AIC_SMR(n)		(AT91_AIC + ((n) * 4))	/* Source Mode Registers 0-31 */
 #define		AT91_AIC_PRIOR		(7 << 0)		/* Priority Level */
 #define		AT91_AIC_SRCTYPE	(3 << 5)		/* Interrupt Source Type */

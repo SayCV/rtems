@@ -15,6 +15,33 @@
 #ifndef AT91_ADC_H
 #define AT91_ADC_H
 
+typedef struct {
+  uint32_t cr;        /**< \brief (adc offset: 0x00) control register */
+  uint32_t mr;        /**< \brief (adc offset: 0x04) mode register */
+  uint32_t seqr1;     /**< \brief (adc offset: 0x08) channel sequence register 1 */
+  uint32_t seqr2;     /**< \brief (adc offset: 0x0c) channel sequence register 2 */
+  uint32_t cher;      /**< \brief (adc offset: 0x10) channel enable register */
+  uint32_t chdr;      /**< \brief (adc offset: 0x14) channel disable register */
+  uint32_t chsr;      /**< \brief (adc offset: 0x18) channel status register */
+  uint32_t reserved1[1];
+  uint32_t lcdr;      /**< \brief (adc offset: 0x20) last converted data register */
+  uint32_t ier;       /**< \brief (adc offset: 0x24) interrupt enable register */
+  uint32_t idr;       /**< \brief (adc offset: 0x28) interrupt disable register */
+  uint32_t imr;       /**< \brief (adc offset: 0x2c) interrupt mask register */
+  uint32_t isr;       /**< \brief (adc offset: 0x30) interrupt status register */
+  uint32_t reserved2[2];
+  uint32_t over;      /**< \brief (adc offset: 0x3c) overrun status register */
+  uint32_t emr;       /**< \brief (adc offset: 0x40) extended mode register */
+  uint32_t cwr;       /**< \brief (adc offset: 0x44) compare window register */
+  uint32_t reserved3[2];
+  uint32_t cdr[12];   /**< \brief (adc offset: 0x50) channel data register */
+  uint32_t reserved4[16];
+  uint32_t trgr;      /**< \brief (adc offset: 0xc0) trigger register */
+  uint32_t reserved5[8];
+  uint32_t wpmr;      /**< \brief (adc offset: 0xe4) write protect mode register */
+  uint32_t wpsr;      /**< \brief (adc offset: 0xe8) write protect status register */
+} at91_adc_t;
+
 #define AT91_ADC_CR		0x00		/* Control Register */
 #define		AT91_ADC_SWRST		(1 << 0)	/* Software Reset */
 #define		AT91_ADC_START		(1 << 1)	/* Start Conversion */
