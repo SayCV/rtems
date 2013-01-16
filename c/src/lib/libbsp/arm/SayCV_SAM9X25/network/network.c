@@ -2,7 +2,7 @@
  *  AT91SAM9X25 ethernet driver
  *
  */
-#if 1
+#if 0
 #include <rtems.h>
 #include <rtems/rtems_bsdnet.h>
 #include <at91sam9x5.h>

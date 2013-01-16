@@ -44,7 +44,7 @@ typedef struct at91_emac {
 	uint32_t	 man;
 	//uint32_t	 reserved1[2];
 	uint32_t	 ptr;
-	uint32_t	 ptr;
+	uint32_t	 pfr;
 	uint32_t	 fto;
 	//uint32_t	 fra;
 	uint32_t	 scf;

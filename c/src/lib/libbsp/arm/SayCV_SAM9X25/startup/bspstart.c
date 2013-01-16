@@ -53,19 +53,19 @@ void bsp_start_default( void )
    * Some versions of the bootloader have the MAC address
    * reversed. This fixes it, if necessary.
    */
-  fix_mac_addr();
+  //fix_mac_addr();
 //CSP_LED_NBR_on(CFG_LED_NBR_03);
   /*
    * Init rtems PIO configuration for USARTs
    */
   bsp_usart_init(); 
-  printk("Init Finshed. rtems PIO configuration for USARTs\r\n");
+  dbgu_printf("Init Finshed. rtems PIO configuration for USARTs\r\n");
 
   /*
    * Init rtems exceptions management
    */
   rtems_exception_init_mngt();
-  printk("Init Finshed. rtems exceptions management\r\n");
+  dbgu_printf("Init Finshed. rtems exceptions management\r\n");
 
   /*
    * Init rtems interrupt management

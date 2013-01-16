@@ -93,7 +93,9 @@ void  CPU_Relocate_InitExceptVect (void)
 void bsp_interrupt_dispatch(void)
 {
   rtems_vector_number vector = at91_sys_read(AT91_AIC_IVR);//AIC_CTL_REG(AIC_IVR);
-
+  //rtems_vector_number vector = at91_sys_read(AT91_AIC_ISR) & 0x1F;
+	dbgu_printf("bsp_interrupt_dispatch Start.\r\n");
+	printk("bsp_interrupt_dispatch interrupt: %u\n", vector);
   bsp_interrupt_handler_dispatch(vector);
 
   at91_sys_write(AT91_AIC_EOICR, 0);//AIC_CTL_REG(AIC_EOICR) = 0;
@@ -133,12 +135,16 @@ rtems_status_code bsp_interrupt_facility_initialize(void)
 	at91_sys_write(AT91_AIC_SPU, 32);
 
 	/* No debugging in AIC: Debug (Protect) Control Register */
-	at91_sys_write(AT91_AIC_DCR, 0);
+	//at91_sys_write(AT91_AIC_DCR, 0);
 
 	/* Disable and clear all interrupts initially */
 	at91_sys_write(AT91_AIC_IDCR, 0xFFFFFFFF);
 	at91_sys_write(AT91_AIC_ICCR, 0xFFFFFFFF);
-
+	
+	/*
+	 * cpukit\score\cpu\arm\rtems\score\cpu.h ARM_EXCEPTION_IRQ = 6,
+	 * cpukit\score\cpu\arm\arm_exc_interrupt.S arm_exc_interrupt
+	 */
   _CPU_ISR_install_vector(ARM_EXCEPTION_IRQ, arm_exc_interrupt, NULL);
 	
 	//CPU_Relocate_InitExceptVect();

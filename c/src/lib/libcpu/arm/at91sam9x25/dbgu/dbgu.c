@@ -229,6 +229,27 @@ static void _BSP_put_char( char c ) {
     dbgu_write_polled(0, '\r');
 }
 
+void  dbgu_printf (uint8_t  *p_fmt, 
+                     ...)
+{
+    uint8_t		str[80u + 1u];
+    uint8_t  	len;
+    va_list		vargs;
+    uint8_t  	i;
+
+    va_start(vargs, p_fmt);
+
+    vsprintf((char       *)str, 
+             (char const *)p_fmt, 
+                           vargs);
+   
+    va_end(vargs);
+
+    len = strlen(str);
+		
+		dbgu_write(0, &str[0], len);
+}
+
 BSP_output_char_function_type     BSP_output_char = _BSP_put_char;
 
 int _BSP_poll_char(void)

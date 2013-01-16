@@ -78,7 +78,7 @@ rtems_irq_connect_data clock_isr_data = {
   .isOn   = clock_isr_is_on,
 };
 
-
+/* libbsp/shared/src/irq-leagcy.c */
 #define Clock_driver_support_install_isr( _new, _old ) \
   do {                                                 \
       (_old) = NULL;                                   \
