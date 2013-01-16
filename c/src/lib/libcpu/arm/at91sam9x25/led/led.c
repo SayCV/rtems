@@ -19,6 +19,7 @@
 #include <at91_pmc.h>
 #include <at91_io.h>
 #include <at91_gpio.h>
+#include <led.h>
 
 #include <rtems/bspIo.h>
 
