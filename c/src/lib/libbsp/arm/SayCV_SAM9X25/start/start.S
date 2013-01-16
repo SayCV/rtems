@@ -111,6 +111,9 @@ _bss_init:
         stmia   r0!, {r2-r9}
 
         /* Now we are prepared to start the BSP's C code */
+        bl  CSP_LED_NBR1_on
+        bl  CSP_LED_NBR2_on
+        
         mov     r0, #0
         bl      boot_card
 

@@ -32,4 +32,12 @@ void CSP_LED_NBRS_on(uint32_t led_nbr);
 
 void CSP_LED_NBRS_off(uint32_t led_nbr);
 
+void CSP_LED_NBR1_on(void);
+void CSP_LED_NBR2_on(void);
+void CSP_LED_NBR3_on(void);
+void CSP_LED_NBR4_on(void);
+void CSP_LED_NBR5_on(void);
+void CSP_LED_NBR6_on(void);
+void CSP_LED_NBR7_on(void);
+
 #endif

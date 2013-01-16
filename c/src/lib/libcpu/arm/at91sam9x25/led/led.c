@@ -99,3 +99,32 @@ void CSP_LED_NBRS_off(uint32_t led_nbr)
 		at91_set_gpio_value(i, 0);
 	}
 }
+
+void CSP_LED_NBR1_on(void)
+{
+	at91_set_gpio_value(CFG_LED_NBR_01, 1);
+}
+void CSP_LED_NBR2_on(void)
+{
+	at91_set_gpio_value(CFG_LED_NBR_02, 1);
+}
+void CSP_LED_NBR3_on(void)
+{
+	at91_set_gpio_value(CFG_LED_NBR_03, 1);
+}
+void CSP_LED_NBR4_on(void)
+{
+	at91_set_gpio_value(CFG_LED_NBR_04, 1);
+}
+void CSP_LED_NBR5_on(void)
+{
+	at91_set_gpio_value(CFG_LED_NBR_05, 1);
+}
+void CSP_LED_NBR6_on(void)
+{
+	at91_set_gpio_value(CFG_LED_NBR_06, 1);
+}
+void CSP_LED_NBR7_on(void)
+{
+	at91_set_gpio_value(CFG_LED_NBR_07, 1);
+}
