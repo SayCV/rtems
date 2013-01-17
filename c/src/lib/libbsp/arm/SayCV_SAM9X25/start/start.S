@@ -80,15 +80,8 @@ _bss_init:
         add     sp, sp, r1
         sub     sp, sp, #0x64
 
-        bl  CSP_RemapRam
-        
-        /*
-         * Initialize the MMU. After we return, the MMU is enabled,
-         * and memory may be remapped. I hope we don't remap this
-         * memory away.
-         */
-        /*ldr     r0, =mem_map
-        bl      mmu_init*/
+        bl  CSP_LED_NBR1_on
+        bl  CSP_LED_NBR2_on
         
         /*shut down mmu*/
         /* */
@@ -97,6 +90,16 @@ _bss_init:
     		ORR R0, R0, #MMU_C1_I  
     		MCR P15, 0, R0, C1, C0, 0
     		/**/
+    		
+        /*
+         * Initialize the MMU. After we return, the MMU is enabled,
+         * and memory may be remapped. I hope we don't remap this
+         * memory away.
+         */
+        /*ldr     r0, =mem_map
+        bl      mmu_init*/
+
+    		bl  CSP_RemapRam
 
         /*
          * Initialize the exception vectors. This includes the
@@ -111,9 +114,6 @@ _bss_init:
         stmia   r0!, {r2-r9}
 
         /* Now we are prepared to start the BSP's C code */
-        bl  CSP_LED_NBR1_on
-        bl  CSP_LED_NBR2_on
-        
         mov     r0, #0
         bl      boot_card
 

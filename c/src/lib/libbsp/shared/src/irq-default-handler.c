@@ -19,4 +19,5 @@
 void bsp_interrupt_handler_default(rtems_vector_number vector)
 {
   printk("spurious interrupt: %u\n", vector);
+  printk("bsp_interrupt_handler_default: %u\n", vector);
 }
