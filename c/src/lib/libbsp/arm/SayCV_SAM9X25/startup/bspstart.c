@@ -46,7 +46,7 @@ void bsp_start_default( void )
   /* disable interrupts */
   //AIC_CTL_REG(AIC_IDCR) = 0xffffffff;
   at91_sys_write(AT91_AIC_IDCR, 0xffffffff);
-  at91_clock_init(BSP_MAIN_FREQ);
+  //at91_clock_init(BSP_MAIN_FREQ);
 
   /*
    * Some versions of the bootloader have the MAC address

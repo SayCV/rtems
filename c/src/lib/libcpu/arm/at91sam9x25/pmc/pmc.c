@@ -254,7 +254,8 @@ void udelay(unsigned int usecs)
 void CSP_RemapRom( void )
 {
     //CSP_MATRIX_REG->MATRIX_MRCR = 0;
-    at91_sys_write(AT91_MATRIX_MRCR, 0);
+    //at91_sys_write(AT91_MATRIX_MRCR, 0);
+    *(uint32_t *)AT91_MATRIX_MRCR = 0;
 }
 
 /**
@@ -264,5 +265,6 @@ void CSP_RemapRom( void )
 void CSP_RemapRam( void )
 {
     //CSP_MATRIX_REG->MATRIX_MRCR = CSP_MATRIX_MRCR_RCB0 | CSP_MATRIX_MRCR_RCB1;
-    at91_sys_write(AT91_MATRIX_MRCR, AT91_MATRIX_RCB0 | AT91_MATRIX_RCB1);
+    //at91_sys_write(AT91_MATRIX_MRCR, AT91_MATRIX_RCB0 | AT91_MATRIX_RCB1);
+    *(uint32_t *)AT91_MATRIX_MRCR = AT91_MATRIX_RCB0 | AT91_MATRIX_RCB1;
 }
