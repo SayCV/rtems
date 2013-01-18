@@ -1,14 +1,26 @@
+/**
+ * @file
+ *
+ * @brief Boot and system start code.
+ */
+
 /*
- * SayCV_SAM9X25 startup code
+ * Copyright (c) 2008-2011 embedded brains GmbH.  All rights reserved.
  *
- * Copyright (c) 2004 by Jay Monkman <jtm@lopingdog.com>
+ *  embedded brains GmbH
+ *  Obere Lagerstr. 30
+ *  82178 Puchheim
+ *  Germany
+ *  <rtems@embedded-brains.de>
  *
- *  The license and distribution terms for this file may be
- *  found in the file LICENSE in this distribution or at
- *  http://www.rtems.com/license/LICENSE.
-*/
+ * The license and distribution terms for this file may be
+ * found in the file LICENSE in this distribution or at
+ * http://www.rtems.com/license/LICENSE.
+ */
 
 #include <bsp/linker-symbols.h>
+
+#define ARM_MULTILIB_ARCH_V4
 
 /* Some standard definitions...*/
 .equ PSR_MODE_USR,       0x10
@@ -23,12 +35,81 @@
 .equ PSR_F,              0x40
 .equ PSR_T,              0x20
 
-.equ MMU_C1_M,       		0x0001  
-.equ MMU_C1_I,					0x1000  
 
-.text
-.globl  _start
+	/* External symbols */
+	.extern	bsp_reset
+	.extern	boot_card
+	.extern	bsp_start_hook_0
+	.extern	bsp_start_hook_1
+
+	/* Global symbols */
+	.globl	_start
+	.globl	bsp_start_vector_table_begin
+	.globl	bsp_start_vector_table_end
+	.globl	bsp_start_vector_table_size
+	.globl	bsp_vector_table_size
+
+	.section	".bsp_start_text", "ax"
+
+#if defined(ARM_MULTILIB_ARCH_V4)
+
+	.arm
+
+/*
+ * This is the exception vector table and the pointers to the default
+ * exceptions handlers.
+ */
+
+bsp_start_vector_table_begin:
+
+	ldr	pc, Reset_Addr
+	ldr	pc, Undefined_Addr
+	ldr	pc, SWI_Addr
+	ldr	pc, Prefetch_Addr
+	ldr	pc, Abort_Addr
+
+	/* Program signature checked by boot loader */
+	.word	0xb8a06f58
+
+	ldr	pc, IRQ_Addr
+	ldr	pc, FIQ_Addr
+
+	.globl Reset_Addr
+Reset_Addr:	.long   _start
+Undefined_Addr:	.long	Undefined_Handler
+SWI_Addr:	.long	SWI_Handler
+Prefetch_Addr:	.long	Prefetch_Handler
+Abort_Addr:	.long	Abort_Handler
+		.long	0
+IRQ_Addr:	.long	IRQ_Handler
+FIQ_Addr:	.long	FIQ_Handler
+
+/* The following handlers do not do anything useful */
+	.globl Undefined_Handler
+Undefined_Handler:
+        B       Undefined_Handler
+	.globl SWI_Handler
+SWI_Handler:
+        B       SWI_Handler
+	.globl Prefetch_Handler
+Prefetch_Handler:
+        B       Prefetch_Handler
+	.globl Abort_Handler
+Abort_Handler:
+        B       Abort_Handler
+	.globl IRQ_Handler
+IRQ_Handler:
+        B       IRQ_Handler
+	.globl FIQ_Handler
+FIQ_Handler:
+        B       FIQ_Handler
+
+bsp_start_vector_table_end:
+
+/* Start entry */
+
 _start:
+
         /*
          * Since I don't plan to return to the bootloader,
          * I don't have to save the registers.
@@ -38,17 +119,6 @@ _start:
          */
         mov     r0, #(PSR_MODE_SVC | PSR_I | PSR_F)
         msr     cpsr, r0
-
-        /* zero the bss */
-        ldr     r1, =bsp_section_bss_end
-        ldr     r0, =bsp_section_bss_begin
-
-_bss_init:
-        mov     r2, #0
-        cmp     r0, r1
-        strlot  r2, [r0], #4
-        blo     _bss_init        /* loop while r0 < r1 */
-
 
         /* --- Initialize stack pointer registers */
         /* Enter IRQ mode and set up the IRQ stack pointer */
@@ -80,17 +150,33 @@ _bss_init:
         add     sp, sp, r1
         sub     sp, sp, #0x64
 
-        bl  CSP_LED_NBR1_on
-        bl  CSP_LED_NBR2_on
-        
-        /*shut down mmu*/
-        /* */
-    		MRC P15, 0, R0, C1, C0, 0  
-    		BIC R0, R0, #MMU_C1_M  
-    		ORR R0, R0, #MMU_C1_I  
-    		MCR P15, 0, R0, C1, C0, 0
-    		/**/
-    		
+	/* disable mmu, I and D caches*/
+	nop
+	nop
+	mrc p15, 0, r0, c1, c0, 0
+	bic r0, r0, #0x01
+	bic r0, r0, #0x04
+	bic r0, r0, #0x01000
+	mcr p15, 0, r0, c1, c0, 0
+	nop
+	nop
+
+	/* clean data cache */
+	mov   r1,#0x00
+Loop1:
+	mov   r2,#0x00
+Loop2:
+	mov r3, r2, lsl#26
+	orr r3, r3, r1, lsl#5
+	mcr p15, 0, r3, c7, c14, 2
+	add r2, r2, #0x01
+	cmp r2, #64
+	bne Loop2
+	add r1, r1, #0x01
+	cmp r1, #8
+	bne Loop1
+
+
         /*
          * Initialize the MMU. After we return, the MMU is enabled,
          * and memory may be remapped. I hope we don't remap this
@@ -98,20 +184,19 @@ _bss_init:
          */
         /*ldr     r0, =mem_map
         bl      mmu_init*/
+        bl CSP_RemapRam
 
-    		bl  CSP_RemapRam
+	/*
+	 * Initialize the exception vectors.  This includes the exceptions
+	 * vectors and the pointers to the default exception handlers.
+	 */
 
-        /*
-         * Initialize the exception vectors. This includes the
-         * exceptions vectors (0x00000000-0x0000001c), and the
-         * pointers to the exception handlers (0x00000020-0x0000003c).
-         */
-        mov     r0, #0
-        adr     r1, vector_block
-        ldmia   r1!, {r2-r9}
-        stmia   r0!, {r2-r9}
-        ldmia   r1!, {r2-r9}
-        stmia   r0!, {r2-r9}
+	ldr	r0, =bsp_vector_table_begin
+	adr	r1, bsp_start_vector_table_begin
+	ldmia	r1!, {r2-r9}
+	stmia	r0!, {r2-r9}
+	ldmia	r1!, {r2-r9}
+	stmia	r0!, {r2-r9}
 
         /* Now we are prepared to start the BSP's C code */
         mov     r0, #0
@@ -127,35 +212,58 @@ _bss_init:
         /* We shouldn't get here. If we do, hang */
 _hang:  b       _hang
 
+#elif defined(ARM_MULTILIB_ARCH_V7M)
 
-/*
- * This is the exception vector table and the pointers to
- * the functions that handle the exceptions. It's a total
- * of 16 words (64 bytes)
- */
-vector_block:
-        ldr     pc, Reset_Handler
-        ldr     pc, Undefined_Handler
-        ldr     pc, SWI_Handler
-        ldr     pc, Prefetch_Handler
-        ldr     pc, Abort_Handler
-        nop
-        ldr     pc, IRQ_Handler
-        ldr     pc, FIQ_Handler
+	.syntax	unified
 
-Reset_Handler:          b       bsp_reset
-Undefined_Handler:      b       Undefined_Handler
-SWI_Handler:            b       SWI_Handler
-Prefetch_Handler:       b       Prefetch_Handler
-Abort_Handler:          b       Abort_Handler
-                        nop
-IRQ_Handler:            b       IRQ_Handler
-FIQ_Handler:            b       FIQ_Handler
+	.extern	bsp_stack_main_end
 
-.globl Reset_Handler
-.globl Undefined_Handler
-.globl SWI_Handler
-.globl Prefetch_Handler
-.globl Abort_Handler
-.globl IRQ_Handler
-.globl FIQ_Handler
+	.thumb
+
+bsp_start_vector_table_begin:
+
+	.word	bsp_stack_main_end
+	.word	_start /* Reset */
+	.word	bsp_reset /* NMI */
+	.word	bsp_reset /* Hard Fault */
+	.word	bsp_reset /* MPU Fault */
+	.word	bsp_reset /* Bus Fault */
+	.word	bsp_reset /* Usage Fault */
+	.word	bsp_reset /* Reserved */
+	.word	bsp_reset /* Reserved */
+	.word	bsp_reset /* Reserved */
+	.word	bsp_reset /* Reserved */
+	.word	bsp_reset /* SVC */
+	.word	bsp_reset /* Debug Monitor */
+	.word	bsp_reset /* Reserved */
+	.word	bsp_reset /* PendSV */
+	.word	bsp_reset /* SysTick */
+	.rept	BSP_INTERRUPT_VECTOR_MAX + 1
+	.word	bsp_reset /* IRQ */
+	.endr
+
+bsp_start_vector_table_end:
+
+	.thumb_func
+
+_start:
+
+	ldr	sp, =bsp_stack_main_end
+	ldr	lr, =bsp_start_hook_0_done + 1
+	b	bsp_start_hook_0
+
+bsp_start_hook_0_done:
+
+	bl	bsp_start_hook_1
+	movs	r0, #0
+	bl	boot_card
+
+twiddle:
+
+	bl	bsp_reset
+	b	twiddle
+
+#endif /* defined(ARM_MULTILIB_ARCH_V7M) */
+
+	.set	bsp_start_vector_table_size, bsp_start_vector_table_end - bsp_start_vector_table_begin
+	.set	bsp_vector_table_size, bsp_start_vector_table_size
