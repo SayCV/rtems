@@ -141,7 +141,7 @@ rtems_status_code bsp_interrupt_facility_initialize(void)
 	at91_sys_write(AT91_AIC_IDCR, 0xFFFFFFFF);
 	at91_sys_write(AT91_AIC_ICCR, 0xFFFFFFFF);
 	
-	CPU_Relocate_InitExceptVect();
+	//CPU_Relocate_InitExceptVect();
 	
 	/*
 	 * cpukit\score\cpu\arm\rtems\score\cpu.h ARM_EXCEPTION_IRQ = 6,
