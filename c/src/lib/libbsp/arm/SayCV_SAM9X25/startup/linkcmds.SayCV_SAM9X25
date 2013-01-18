@@ -21,5 +21,6 @@ REGION_ALIAS ("REGION_WORK", DDRAM);
 REGION_ALIAS ("REGION_STACK", DDRAM);
 
 /*_ttbl_base = ORIGIN (DDRAM_MMU);*/
+bsp_vector_table_in_start_section = 1;
 
 INCLUDE linkcmds.armv4

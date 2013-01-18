@@ -120,6 +120,16 @@ _start:
         mov     r0, #(PSR_MODE_SVC | PSR_I | PSR_F)
         msr     cpsr, r0
 
+        /* zero the bss */
+        ldr     r1, =bsp_section_bss_end
+        ldr     r0, =bsp_section_bss_begin
+
+_bss_init:
+        mov     r2, #0
+        cmp     r0, r1
+        strlot  r2, [r0], #4
+        blo     _bss_init        /* loop while r0 < r1 */
+        
         /* --- Initialize stack pointer registers */
         /* Enter IRQ mode and set up the IRQ stack pointer */
         mov     r0, #(PSR_MODE_IRQ | PSR_I | PSR_F)     /* No interrupts */
@@ -162,7 +172,7 @@ _start:
 	nop
 
 	/* clean data cache */
-	mov   r1,#0x00
+	/* mov   r1,#0x00
 Loop1:
 	mov   r2,#0x00
 Loop2:
@@ -174,7 +184,7 @@ Loop2:
 	bne Loop2
 	add r1, r1, #0x01
 	cmp r1, #8
-	bne Loop1
+	bne Loop1 */
 
 
         /*
