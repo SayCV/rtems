@@ -184,7 +184,7 @@ Loop2:
          */
         /*ldr     r0, =mem_map
         bl      mmu_init*/
-        bl CSP_RemapRam
+        //bl CSP_RemapRam
 
 	/*
 	 * Initialize the exception vectors.  This includes the exceptions
