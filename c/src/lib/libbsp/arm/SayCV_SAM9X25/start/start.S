@@ -39,8 +39,8 @@
 	/* External symbols */
 	.extern	bsp_reset
 	.extern	boot_card
-	.extern	bsp_start_hook_0
-	.extern	bsp_start_hook_1
+	.extern	CSP_LED_NBR1_on
+	.extern	CSP_LED_NBR2_on
 
 	/* Global symbols */
 	.globl	_start
@@ -61,7 +61,7 @@
  */
 
 bsp_start_vector_table_begin:
-
+_start:
 	ldr	pc, Reset_Addr
 	ldr	pc, Undefined_Addr
 	ldr	pc, SWI_Addr
@@ -75,14 +75,14 @@ bsp_start_vector_table_begin:
 	ldr	pc, FIQ_Addr
 
 	.globl Reset_Addr
-Reset_Addr:	.long   _start
-Undefined_Addr:	.long	Undefined_Handler
-SWI_Addr:	.long	SWI_Handler
-Prefetch_Addr:	.long	Prefetch_Handler
-Abort_Addr:	.long	Abort_Handler
-		.long	0
-IRQ_Addr:	.long	IRQ_Handler
-FIQ_Addr:	.long	FIQ_Handler
+Reset_Addr:	.word   _reset
+Undefined_Addr:	.word	Undefined_Handler
+SWI_Addr:	.word	SWI_Handler
+Prefetch_Addr:	.word	Prefetch_Handler
+Abort_Addr:	.word	Abort_Handler
+		.word	0
+IRQ_Addr:	.word	IRQ_Handler
+FIQ_Addr:	.word	FIQ_Handler
 
 /* The following handlers do not do anything useful */
 	.globl Undefined_Handler
@@ -108,7 +108,7 @@ bsp_start_vector_table_end:
 
 /* Start entry */
 
-_start:
+_reset:
 
         /*
          * Since I don't plan to return to the bootloader,
@@ -200,6 +200,11 @@ Loop2:
 	 * Initialize the exception vectors.  This includes the exceptions
 	 * vectors and the pointers to the default exception handlers.
 	 */
+	    /*
+         * Initialize the exception vectors. This includes the
+         * exceptions vectors (0x00000000-0x0000001c), and the
+         * pointers to the exception handlers (0x00000020-0x0000003c).
+         */
 
 	ldr	r0, =bsp_vector_table_begin
 	adr	r1, bsp_start_vector_table_begin
