@@ -102,7 +102,7 @@ _start:
          * I'll just set the CPSR for SVC mode, interrupts
          * off, and ARM instructions.
          */
-        mov     r0, #(MODE_SVC | I_Bit | F_Bit)
+        MOV     r0, #Mode_SVC | I_Bit | F_Bit     /* No interrupts */
         msr     cpsr, r0
         
 /*
