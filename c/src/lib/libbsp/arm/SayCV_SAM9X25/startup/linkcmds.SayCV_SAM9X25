@@ -22,5 +22,10 @@ REGION_ALIAS ("REGION_STACK", DDRAM);
 
 /*_ttbl_base = ORIGIN (DDRAM_MMU);*/
 bsp_vector_table_in_start_section = 1;
+bsp_stack_irq_size = DEFINED (bsp_stack_irq_size) ? bsp_stack_irq_size : 4096;
+bsp_stack_abt_size = DEFINED (bsp_stack_abt_size) ? bsp_stack_abt_size : 1024;
+
+bsp_section_rwbarrier_align = DEFINED (bsp_section_rwbarrier_align) ? bsp_section_rwbarrier_align : 1M;
+
 
 INCLUDE linkcmds.armv4
