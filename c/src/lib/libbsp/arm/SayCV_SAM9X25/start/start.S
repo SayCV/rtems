@@ -1,11 +1,7 @@
 /*
- * Cirrus EP7312 Startup code
+ * SayCV_SAM9X25 startup code
  *
- * Copyright (c) 2010 embedded brains GmbH.
- *
- * Copyright (c) 2002 by Jay Monkman <jtm@smoothsmoothie.com>
- *
- * Copyright (c) 2002 by Charlie Steader <charlies@poliac.com>
+ * Copyright (c) 2004 by Jay Monkman <jtm@lopingdog.com>
  *
  *  The license and distribution terms for this file may be
  *  found in the file LICENSE in this distribution or at
@@ -14,73 +10,41 @@
 
 #include <bsp/linker-symbols.h>
 
-	/* External symbols */
-	.extern	bsp_reset
-	.extern	boot_card
-	.extern CSP_LED_NBR1_on
-	.extern CSP_RemapRam
-	.extern boot_card
-
-	/* Global symbols */
-	.globl	_start
-	.globl	bsp_start_vector_table_begin
-	.globl	bsp_start_vector_table_end
-	.globl	bsp_start_vector_table_size
-	.globl	bsp_vector_table_size
-
-	.globl Reset_Handler
-	.globl Undefined_Handler
-	.globl SWI_Handler
-	.globl Prefetch_Handler
-	.globl Abort_Handler
-	.globl IRQ_Handler
-	.globl FIQ_Handler
-	
 /* Some standard definitions...*/
+.equ PSR_MODE_USR,       0x10
+.equ PSR_MODE_FIQ,       0x11
+.equ PSR_MODE_IRQ,       0x12
+.equ PSR_MODE_SVC,       0x13
+.equ PSR_MODE_ABT,       0x17
+.equ PSR_MODE_UNDEF,     0x1B
+.equ PSR_MODE_SYS,       0x1F
 
-.equ Mode_USR,        	     0x10
-.equ Mode_FIQ,        	     0x11
-.equ Mode_IRQ,        	     0x12
-.equ Mode_SVC,        	     0x13
-.equ Mode_ABT,        	     0x17
-.equ Mode_ABORT,             0x17
-.equ Mode_UNDEF,      	     0x1B
-.equ Mode_SYS,        	     0x1F /*only available on ARM Arch. v4*/
+.equ PSR_I,              0x80
+.equ PSR_F,              0x40
+.equ PSR_T,              0x20
 
-.equ I_Bit,           	     0x80
-.equ F_Bit,           	     0x40
+.equ MMU_C1_M,       		0x0001  
+.equ MMU_C1_I,					0x1000  
 
-.section ".bsp_start_text", "ax"
+.text
+.globl  _start
+_start:
+/*
+ * This is the exception vector table and the pointers to
+ * the functions that handle the exceptions. It's a total
+ * of 16 words (64 bytes)
+ */
+vector_block:
+        ldr     pc, Reset_Handler
+        ldr     pc, Undefined_Handler
+        ldr     pc, SWI_Handler
+        ldr     pc, Prefetch_Handler
+        ldr     pc, Abort_Handler
+        nop
+        ldr     pc, IRQ_Handler
+        ldr     pc, FIQ_Handler
 
-	.arm
-	
-/*******************************************************
- standard exception vectors table
- *** Must be located at address 0
-********************************************************/
-
-bsp_start_vector_table_begin:
-	LDR	PC, Reset_Addr
-	LDR	PC, Undefined_Addr
-	LDR	PC, SWI_Addr
-	LDR	PC, Prefetch_Addr
-	LDR	PC, Abort_Addr
-	/* Program signature checked by boot loader */
-	.word	0xb8a06f58
-	LDR	PC, IRQ_Addr
-	LDR	PC, FIQ_Addr
-
-Reset_Addr:	.long	Reset_Handler
-Undefined_Addr:	.long	Undefined_Handler
-SWI_Addr:	.long	SWI_Handler
-Prefetch_Addr:	.long	Prefetch_Handler
-Abort_Addr:	.long	Abort_Handler
-		.long	0
-IRQ_Addr:	.long	IRQ_Handler
-FIQ_Addr:	.long	FIQ_Handler
-
-
-Reset_Handler:          b       _start
+Reset_Handler:          b       _start_init
 Undefined_Handler:      b       Undefined_Handler
 SWI_Handler:            b       SWI_Handler
 Prefetch_Handler:       b       Prefetch_Handler
@@ -89,12 +53,17 @@ Abort_Handler:          b       Abort_Handler
 IRQ_Handler:            b       IRQ_Handler
 FIQ_Handler:            b       FIQ_Handler
 
-bsp_start_vector_table_end:
+.globl Reset_Handler
+.globl Undefined_Handler
+.globl SWI_Handler
+.globl Prefetch_Handler
+.globl Abort_Handler
+.globl IRQ_Handler
+.globl FIQ_Handler
 
-_start:
-	/* store the sp */
-	mov	r12, sp
-	
+_start_init:
+				bl  CSP_LED_NBR3_on
+				
         /*
          * Since I don't plan to return to the bootloader,
          * I don't have to save the registers.
@@ -102,29 +71,8 @@ _start:
          * I'll just set the CPSR for SVC mode, interrupts
          * off, and ARM instructions.
          */
-        MOV     r0, #Mode_SVC | I_Bit | F_Bit     /* No interrupts */
+        mov     r0, #(PSR_MODE_SVC | PSR_I | PSR_F)
         msr     cpsr, r0
-        
-/*
- * Here is the code to initialize the low-level BSP environment
- * (Chip Select, PLL, ....?)
- */
-
-		bl			CSP_LED_NBR1_on
-		
-		bl			CSP_RemapRam
-		
-		/*
-		 * relocate exception table
-		 */
-		ldr	r0, =bsp_start_vector_table_begin
-		ldr	r1, =0x0
-		mov	r2, #16
-copyex:
-		subs	r2, r2, #1
-		ldr	r3, [r0], #4
-		str	r3, [r1], #4
-		bne	copyex
 
         /* zero the bss */
         ldr     r1, =bsp_section_bss_end
@@ -136,72 +84,83 @@ _bss_init:
         strlot  r2, [r0], #4
         blo     _bss_init        /* loop while r0 < r1 */
 
-/* --- Initialise stack pointer registers */
 
-/* Enter IRQ mode and set up the IRQ stack pointer */
-    MOV     r0, #Mode_IRQ | I_Bit | F_Bit     /* No interrupts */
-    MSR     cpsr, r0
-    ldr	    r1, =bsp_stack_irq_size
-    LDR     sp, =bsp_stack_irq_begin
-    add	    sp, sp, r1
-    sub     sp, sp, #0x64
+        /* --- Initialize stack pointer registers */
+        /* Enter IRQ mode and set up the IRQ stack pointer */
+        mov     r0, #(PSR_MODE_IRQ | PSR_I | PSR_F)     /* No interrupts */
+        msr     cpsr, r0
+        ldr     r1, =bsp_stack_irq_size
+        ldr     sp, =bsp_stack_irq_begin
+        add     sp, sp, r1
 
-/* Enter FIQ mode and set up the FIQ stack pointer */
-    MOV     r0, #Mode_FIQ | I_Bit | F_Bit     /* No interrupts */
-    MSR     cpsr, r0
-    ldr	    r1, =bsp_stack_fiq_size
-    LDR     sp, =bsp_stack_fiq_begin
-    add	    sp, sp, r1
-    sub     sp, sp, #0x64
+        /* Enter FIQ mode and set up the FIQ stack pointer */
+        mov     r0, #(PSR_MODE_FIQ | PSR_I | PSR_F)     /* No interrupts */
+        msr     cpsr, r0
+        ldr     r1, =bsp_stack_fiq_size
+        ldr     sp, =bsp_stack_fiq_begin
+        add     sp, sp, r1
 
-/* Enter ABT mode and set up the ABT stack pointer */
-    MOV     r0, #Mode_ABT | I_Bit | F_Bit     /* No interrupts */
-    MSR     cpsr, r0
-    ldr	    r1, =bsp_stack_abt_size
-    LDR     sp, =bsp_stack_abt_begin
-    add	    sp, sp, r1
-    sub     sp, sp, #0x64
+        /* Enter ABT mode and set up the ABT stack pointer */
+        mov     r0, #(PSR_MODE_ABT | PSR_I | PSR_F)     /* No interrupts */
+        msr     cpsr, r0
+        ldr     r1, =bsp_stack_abt_size
+        ldr     sp, =bsp_stack_abt_begin
+        add     sp, sp, r1
 
-/* Set up the SVC stack pointer last and stay in SVC mode */
-    MOV     r0, #Mode_SVC | I_Bit | F_Bit     /* No interrupts */
-    MSR     cpsr, r0
-    ldr	    r1, =bsp_stack_svc_size
-    LDR     sp, =bsp_stack_svc_begin
-    add	    sp, sp, r1
-    sub     sp, sp, #0x64
+        /* Set up the SVC stack pointer last and stay in SVC mode */
+        mov     r0, #(PSR_MODE_SVC | PSR_I | PSR_F)     /* No interrupts */
+        msr     cpsr, r0
+        ldr     r1, =bsp_stack_svc_size
+        ldr     sp, =bsp_stack_svc_begin
+        add     sp, sp, r1
+        sub     sp, sp, #0x64
+
+        bl  CSP_RemapRam
+        
+        /*
+         * Initialize the MMU. After we return, the MMU is enabled,
+         * and memory may be remapped. I hope we don't remap this
+         * memory away.
+         */
+        /*ldr     r0, =mem_map
+        bl      mmu_init*/
+        
+        /*shut down mmu*/
+        /* */
+    		MRC P15, 0, R0, C1, C0, 0  
+    		BIC R0, R0, #MMU_C1_M  
+    		ORR R0, R0, #MMU_C1_I  
+    		MCR P15, 0, R0, C1, C0, 0
+    		/**/
+
+        /*
+         * Initialize the exception vectors. This includes the
+         * exceptions vectors (0x00000000-0x0000001c), and the
+         * pointers to the exception handlers (0x00000020-0x0000003c).
+         */
+        mov     r0, #0
+        adr     r1, vector_block
+        ldmia   r1!, {r2-r9}
+        stmia   r0!, {r2-r9}
+        ldmia   r1!, {r2-r9}
+        stmia   r0!, {r2-r9}
+
+        /* Now we are prepared to start the BSP's C code */
+        bl  CSP_LED_NBR1_on
+        bl  CSP_LED_NBR2_on
+        
+        mov     r0, #0
+        bl      boot_card
+
+        /*
+         * Theoretically, we could return to what started us up,
+         * but we'd have to have saved the registers and stacks.
+         * Instead, we'll just reset.
+         */
+        bl      bsp_reset
+
+        /* We shouldn't get here. If we do, hang */
+_hang:  b       _hang
 
 
-		
-	/* save the original registers */
-	stmdb	sp!, {r4-r12, lr}
 
-/* --- Now we enter the C code */
-
-	mov     r0, #0
-	bl	boot_card
-
-	ldmia	sp!, {r4-r12, lr}
-	mov	sp, r12
-	mov	pc, lr
-
-#if 0
-Undefined_Handler:      b       Undefined_Handler
-SWI_Handler:            b       SWI_Handler
-Prefetch_Handler:       b       Prefetch_Handler
-Abort_Handler:          b       Abort_Handler
-                        nop
-IRQ_Handler:            b       IRQ_Handler
-FIQ_Handler:            b       FIQ_Handler
-
-
-.globl Undefined_Handler
-.globl SWI_Handler
-.globl Prefetch_Handler
-.globl Abort_Handler
-.globl IRQ_Handler
-.globl FIQ_Handler
-#endif
-
-	.set	bsp_start_vector_table_size, bsp_start_vector_table_end - bsp_start_vector_table_begin
-	.set	bsp_vector_table_size, bsp_start_vector_table_size
-	
