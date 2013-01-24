@@ -19,34 +19,37 @@
 	.extern	CSP_LED_NBR2_on
 
 	/* Global symbols */
+	.globl  _start
 	.globl	_start_init
 	
 /* Some standard definitions...*/
-.equ PSR_MODE_USR,       0x10
-.equ PSR_MODE_FIQ,       0x11
-.equ PSR_MODE_IRQ,       0x12
-.equ PSR_MODE_SVC,       0x13
-.equ PSR_MODE_ABT,       0x17
-.equ PSR_MODE_UNDEF,     0x1B
-.equ PSR_MODE_SYS,       0x1F
+	.equ PSR_MODE_USR,       0x10
+	.equ PSR_MODE_FIQ,       0x11
+	.equ PSR_MODE_IRQ,       0x12
+	.equ PSR_MODE_SVC,       0x13
+	.equ PSR_MODE_ABT,       0x17
+	.equ PSR_MODE_UNDEF,     0x1B
+	.equ PSR_MODE_SYS,       0x1F
+	
+	.equ PSR_I,              0x80
+	.equ PSR_F,              0x40
+	.equ PSR_T,              0x20
+	
+	.equ MMU_C1_M,       		0x0001  
+	.equ MMU_C1_I,					0x1000  
 
-.equ PSR_I,              0x80
-.equ PSR_F,              0x40
-.equ PSR_T,              0x20
+	.text
 
-.equ MMU_C1_M,       		0x0001  
-.equ MMU_C1_I,					0x1000  
-
-.text
-.globl  _start
 _start:
 /*
  * This is the exception vector table and the pointers to
  * the functions that handle the exceptions. It's a total
  * of 16 words (64 bytes)
  */
-#if 0
+
 vector_block:
+
+#if 1
         ldr     pc, Reset_Handler
         ldr     pc, Undefined_Handler
         ldr     pc, SWI_Handler
@@ -56,14 +59,21 @@ vector_block:
         ldr     pc, IRQ_Handler
         ldr     pc, FIQ_Handler
 
-Reset_Handler:          b       _start_init
-Undefined_Handler:      b       Undefined_Handler
-SWI_Handler:            b       SWI_Handler
-Prefetch_Handler:       b       Prefetch_Handler
-Abort_Handler:          b       Abort_Handler
-                        nop
-IRQ_Handler:            b       IRQ_Handler
-FIQ_Handler:            b       FIQ_Handler
+Reset_Handler:      
+	b       _start_init
+Undefined_Handler:      
+	b       Undefined_Handler
+SWI_Handler:            
+	b       SWI_Handler
+Prefetch_Handler:       
+	b       Prefetch_Handler
+Abort_Handler:          
+	b       Abort_Handler
+	nop
+IRQ_Handler:            
+	b       IRQ_Handler
+FIQ_Handler:            
+	b       FIQ_Handler
 #else
 	LDR	PC, Reset_Addr
 	LDR	PC, Undefined_Addr
@@ -75,19 +85,26 @@ FIQ_Handler:            b       FIQ_Handler
 	LDR	PC, FIQ_Addr
 
 	.globl Reset_Addr
-Reset_Addr:	.long   _start_init
-Undefined_Addr:	.long	Undefined_Handler
-SWI_Addr:	.long	SWI_Handler
-Prefetch_Addr:	.long	Prefetch_Handler
-Abort_Addr:	.long	Abort_Handler
-		.long	0
-IRQ_Addr:	.long	IRQ_Handler
-FIQ_Addr:	.long	FIQ_Handler
+Reset_Addr:	
+	.word   _start_init
+Undefined_Addr:
+	.word	Undefined_Handler
+SWI_Addr:	
+	.word	SWI_Handler
+Prefetch_Addr:	
+	.word	Prefetch_Handler
+Abort_Addr:	
+	.word	Abort_Handler
+	.word	0
+IRQ_Addr:	
+	.word	IRQ_Handler
+FIQ_Addr:	
+	.word	FIQ_Handler
 
 /* The following handlers do not do anything useful */
 	.globl Undefined_Handler
 Undefined_Handler:
-        B       Undefined_Handler
+		B       Undefined_Handler
 	.globl SWI_Handler
 SWI_Handler:
         B       SWI_Handler
@@ -105,12 +122,12 @@ FIQ_Handler:
         B       FIQ_Handler
 #endif
 /* .globl Reset_Handler */
-.globl Undefined_Handler
-.globl SWI_Handler
-.globl Prefetch_Handler
-.globl Abort_Handler
-.globl IRQ_Handler
-.globl FIQ_Handler
+	.globl Undefined_Handler
+	.globl SWI_Handler
+	.globl Prefetch_Handler
+	.globl Abort_Handler
+	.globl IRQ_Handler
+	.globl FIQ_Handler
 
 _start_init:
 				
