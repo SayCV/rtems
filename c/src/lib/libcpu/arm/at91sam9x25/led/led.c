@@ -129,3 +129,14 @@ void CSP_LED_NBR7_on(void)
 {
 	at91_set_gpio_value(CFG_LED_NBR_07, 1);
 }
+
+void CSP_LED_NBRs_Init(void)
+{
+	at91_set_GPIO_periph(CFG_LED_NBR_01, 1);
+	at91_set_GPIO_periph(CFG_LED_NBR_02, 1);
+	at91_set_GPIO_periph(CFG_LED_NBR_03, 1);
+	at91_set_GPIO_periph(CFG_LED_NBR_04, 1);
+	at91_set_GPIO_periph(CFG_LED_NBR_05, 1);
+	at91_set_GPIO_periph(CFG_LED_NBR_06, 1);
+	at91_set_GPIO_periph(CFG_LED_NBR_07, 1);
+}

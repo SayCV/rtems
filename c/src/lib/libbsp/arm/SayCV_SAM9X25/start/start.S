@@ -10,6 +10,17 @@
 
 #include <bsp/linker-symbols.h>
 
+	/* External symbols */
+	.extern	bsp_reset
+	.extern	boot_card
+	.extern	CSP_RemapRam
+	.extern	CSP_LED_NBRs_Init
+	.extern	CSP_LED_NBR1_on
+	.extern	CSP_LED_NBR2_on
+
+	/* Global symbols */
+	.globl	_start_init
+	
 /* Some standard definitions...*/
 .equ PSR_MODE_USR,       0x10
 .equ PSR_MODE_FIQ,       0x11
@@ -34,6 +45,7 @@ _start:
  * the functions that handle the exceptions. It's a total
  * of 16 words (64 bytes)
  */
+#if 0
 vector_block:
         ldr     pc, Reset_Handler
         ldr     pc, Undefined_Handler
@@ -52,8 +64,47 @@ Abort_Handler:          b       Abort_Handler
                         nop
 IRQ_Handler:            b       IRQ_Handler
 FIQ_Handler:            b       FIQ_Handler
+#else
+	LDR	PC, Reset_Addr
+	LDR	PC, Undefined_Addr
+	LDR	PC, SWI_Addr
+	LDR	PC, Prefetch_Addr
+	LDR	PC, Abort_Addr
+	NOP
+	LDR	PC, IRQ_Addr
+	LDR	PC, FIQ_Addr
 
-.globl Reset_Handler
+	.globl Reset_Addr
+Reset_Addr:	.long   _start_init
+Undefined_Addr:	.long	Undefined_Handler
+SWI_Addr:	.long	SWI_Handler
+Prefetch_Addr:	.long	Prefetch_Handler
+Abort_Addr:	.long	Abort_Handler
+		.long	0
+IRQ_Addr:	.long	IRQ_Handler
+FIQ_Addr:	.long	FIQ_Handler
+
+/* The following handlers do not do anything useful */
+	.globl Undefined_Handler
+Undefined_Handler:
+        B       Undefined_Handler
+	.globl SWI_Handler
+SWI_Handler:
+        B       SWI_Handler
+	.globl Prefetch_Handler
+Prefetch_Handler:
+        B       Prefetch_Handler
+	.globl Abort_Handler
+Abort_Handler:
+        B       Abort_Handler
+	.globl IRQ_Handler
+IRQ_Handler:
+        B       IRQ_Handler
+	.globl FIQ_Handler
+FIQ_Handler:
+        B       FIQ_Handler
+#endif
+/* .globl Reset_Handler */
 .globl Undefined_Handler
 .globl SWI_Handler
 .globl Prefetch_Handler
@@ -62,7 +113,6 @@ FIQ_Handler:            b       FIQ_Handler
 .globl FIQ_Handler
 
 _start_init:
-				bl  CSP_LED_NBR3_on
 				
         /*
          * Since I don't plan to return to the bootloader,
@@ -73,7 +123,19 @@ _start_init:
          */
         mov     r0, #(PSR_MODE_SVC | PSR_I | PSR_F)
         msr     cpsr, r0
-
+#if	0
+	/*
+	 * relocate exception table
+	 */
+	ldr	r0, =_start
+	ldr	r1, =0x0
+	mov	r2, #16
+copyex:
+	subs	r2, r2, #1
+	ldr	r3, [r0], #4
+	str	r3, [r1], #4
+	bne	copyex
+#endif
         /* zero the bss */
         ldr     r1, =bsp_section_bss_end
         ldr     r0, =bsp_section_bss_begin
@@ -133,6 +195,7 @@ _bss_init:
     		MCR P15, 0, R0, C1, C0, 0
     		/**/
 
+#if 0
         /*
          * Initialize the exception vectors. This includes the
          * exceptions vectors (0x00000000-0x0000001c), and the
@@ -144,8 +207,9 @@ _bss_init:
         stmia   r0!, {r2-r9}
         ldmia   r1!, {r2-r9}
         stmia   r0!, {r2-r9}
-
+#endif
         /* Now we are prepared to start the BSP's C code */
+        bl  CSP_LED_NBRs_Init
         bl  CSP_LED_NBR1_on
         bl  CSP_LED_NBR2_on
         

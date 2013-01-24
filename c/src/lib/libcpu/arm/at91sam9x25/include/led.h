@@ -40,4 +40,6 @@ void CSP_LED_NBR5_on(void);
 void CSP_LED_NBR6_on(void);
 void CSP_LED_NBR7_on(void);
 
+void CSP_LED_NBRs_Init(void);
+
 #endif
