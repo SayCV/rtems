@@ -49,8 +49,8 @@ _start:
 
 vector_block:
 
-#if 1
-        ldr     pc, Reset_Handler
+#if 0
+        b	_start_init /* ldr     pc, Reset_Handler */
         ldr     pc, Undefined_Handler
         ldr     pc, SWI_Handler
         ldr     pc, Prefetch_Handler
@@ -58,9 +58,10 @@ vector_block:
         nop
         ldr     pc, IRQ_Handler
         ldr     pc, FIQ_Handler
-
+#if 0
 Reset_Handler:      
 	b       _start_init
+#endif
 Undefined_Handler:      
 	b       Undefined_Handler
 SWI_Handler:            
@@ -74,8 +75,10 @@ IRQ_Handler:
 	b       IRQ_Handler
 FIQ_Handler:            
 	b       FIQ_Handler
+
 #else
-	LDR	PC, Reset_Addr
+
+	b	_start_init /* LDR	PC, Reset_Addr */
 	LDR	PC, Undefined_Addr
 	LDR	PC, SWI_Addr
 	LDR	PC, Prefetch_Addr
@@ -83,10 +86,11 @@ FIQ_Handler:
 	NOP
 	LDR	PC, IRQ_Addr
 	LDR	PC, FIQ_Addr
-
+#if 0
 	.globl Reset_Addr
 Reset_Addr:	
 	.word   _start_init
+#endif
 Undefined_Addr:
 	.word	Undefined_Handler
 SWI_Addr:	
@@ -140,7 +144,10 @@ _start_init:
          */
         mov     r0, #(PSR_MODE_SVC | PSR_I | PSR_F)
         msr     cpsr, r0
-#if	0
+        
+        bl  CSP_RemapRam
+        
+#if	1
 	/*
 	 * relocate exception table
 	 */
@@ -194,16 +201,15 @@ _bss_init:
         add     sp, sp, r1
         sub     sp, sp, #0x64
 
-        bl  CSP_RemapRam
-        
+#if 0    
         /*
          * Initialize the MMU. After we return, the MMU is enabled,
          * and memory may be remapped. I hope we don't remap this
          * memory away.
          */
-        /*ldr     r0, =mem_map
-        bl      mmu_init*/
-        
+        ldr     r0, =mem_map
+        bl      mmu_init
+#else    
         /*shut down mmu*/
         /* */
     		MRC P15, 0, R0, C1, C0, 0  
@@ -211,6 +217,7 @@ _bss_init:
     		ORR R0, R0, #MMU_C1_I  
     		MCR P15, 0, R0, C1, C0, 0
     		/**/
+#endif
 
 #if 0
         /*
@@ -226,10 +233,11 @@ _bss_init:
         stmia   r0!, {r2-r9}
 #endif
         /* Now we are prepared to start the BSP's C code */
+#if 0
         bl  CSP_LED_NBRs_Init
         bl  CSP_LED_NBR1_on
         bl  CSP_LED_NBR2_on
-        
+#endif        
         mov     r0, #0
         bl      boot_card
 

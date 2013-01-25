@@ -57,14 +57,14 @@ void bsp_start_default( void )
   /*
    * Init rtems PIO configuration for USARTs
    */
-  bsp_usart_init(); CSP_LED_NBR3_on();
+  bsp_usart_init(); //CSP_LED_NBR3_on();
   dbgu_printf("Init Finshed. rtems PIO configuration for USARTs\r\n");
 
   /*
    * Init rtems exceptions management
    */
-  rtems_exception_init_mngt();CSP_LED_NBR4_on();
-  dbgu_printf("Init Finshed. rtems exceptions management\r\n");
+  rtems_exception_init_mngt();//CSP_LED_NBR4_on();
+  //dbgu_printf("Init Finshed. rtems exceptions management\r\n");
 
   /*
    * Init rtems interrupt management
