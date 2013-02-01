@@ -153,11 +153,7 @@ _bss_init:
         cmp     r0, r1
         strlot  r2, [r0], #4
         blo     _bss_init        /* loop while r0 < r1 */
-#if 0
-        bl  CSP_LED_NBRs_Init
-        bl  CSP_LED_NBR1_on
-        bl  CSP_LED_NBR2_on
-#endif 
+
 
         /* --- Initialize stack pointer registers */
         /* Enter IRQ mode and set up the IRQ stack pointer */
@@ -221,7 +217,11 @@ _bss_init:
         stmia   r0!, {r2-r9}
 #endif
         /* Now we are prepared to start the BSP's C code */
-      
+#if 0 /* avoid cpu reset */
+        bl  CSP_LED_NBRs_Init
+        bl  CSP_LED_NBR1_on
+        bl  CSP_LED_NBR2_on
+#endif       
         mov     r0, #0
         bl      boot_card
 
