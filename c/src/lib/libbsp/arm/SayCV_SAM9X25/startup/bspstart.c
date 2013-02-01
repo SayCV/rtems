@@ -58,7 +58,7 @@ void bsp_start_default( void )
    * Init rtems PIO configuration for USARTs
    */
   bsp_usart_init(); //CSP_LED_NBR3_on();
-  dbgu_printf("Init Finshed. rtems PIO configuration for USARTs\r\n");
+  //dbgu_printf("Init Finshed. rtems PIO configuration for USARTs\r\n");
 
   /*
    * Init rtems exceptions management
@@ -69,9 +69,8 @@ void bsp_start_default( void )
   /*
    * Init rtems interrupt management
    */
-  if (bsp_interrupt_initialize() != RTEMS_SUCCESSFUL) {
-    _CPU_Fatal_halt(0xe);
-  }
+  bsp_interrupt_initialize();
+
 
 } /* bsp_start */
 

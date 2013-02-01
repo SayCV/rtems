@@ -194,7 +194,7 @@ console_tbl Console_Configuration_Ports[] = {
     0                  /* ulIntVector - NOT USED */
   },
 #endif
-#if ENABLE_USART2
+#if 0
   {
     "/dev/com3",       /* sDeviceName */
     SERIAL_CUSTOM,     /* deviceType */

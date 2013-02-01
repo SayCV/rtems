@@ -38,7 +38,12 @@
 	.equ MMU_C1_M,       		0x0001  
 	.equ MMU_C1_I,					0x1000  
 
+#if 0
 	.text
+#else	
+	.section	".bsp_start_text", "ax"
+	.arm
+#endif
 
 _start:
 /*
@@ -77,8 +82,11 @@ FIQ_Handler:
 	b       FIQ_Handler
 
 #else
-
-	b	_start_init /* LDR	PC, Reset_Addr */
+#if 1
+	B		_start_init
+#else
+	LDR	PC, Reset_Addr
+#endif
 	LDR	PC, Undefined_Addr
 	LDR	PC, SWI_Addr
 	LDR	PC, Prefetch_Addr
@@ -99,39 +107,15 @@ Prefetch_Addr:
 	.word	Prefetch_Handler
 Abort_Addr:	
 	.word	Abort_Handler
-	.word	0
+	/* Program signature checked by boot loader */
+	.word	0xb8a06f58
 IRQ_Addr:	
 	.word	IRQ_Handler
 FIQ_Addr:	
 	.word	FIQ_Handler
 
-/* The following handlers do not do anything useful */
-	.globl Undefined_Handler
-Undefined_Handler:
-		B       Undefined_Handler
-	.globl SWI_Handler
-SWI_Handler:
-        B       SWI_Handler
-	.globl Prefetch_Handler
-Prefetch_Handler:
-        B       Prefetch_Handler
-	.globl Abort_Handler
-Abort_Handler:
-        B       Abort_Handler
-	.globl IRQ_Handler
-IRQ_Handler:
-        B       IRQ_Handler
-	.globl FIQ_Handler
-FIQ_Handler:
-        B       FIQ_Handler
-#endif
-/* .globl Reset_Handler */
-	.globl Undefined_Handler
-	.globl SWI_Handler
-	.globl Prefetch_Handler
-	.globl Abort_Handler
-	.globl IRQ_Handler
-	.globl FIQ_Handler
+	
+
 
 _start_init:
 				
@@ -144,21 +128,21 @@ _start_init:
          */
         mov     r0, #(PSR_MODE_SVC | PSR_I | PSR_F)
         msr     cpsr, r0
+         
+        /* bl  CSP_RemapRam */
         
-        bl  CSP_RemapRam
-        
-#if	1
-	/*
-	 * relocate exception table
-	 */
-	ldr	r0, =_start
-	ldr	r1, =0x0
-	mov	r2, #16
+#if	0
+				/*
+				 * relocate exception table
+				 */
+				ldr	r0, =_start
+				ldr	r1, =0x0
+				mov	r2, #16
 copyex:
-	subs	r2, r2, #1
-	ldr	r3, [r0], #4
-	str	r3, [r1], #4
-	bne	copyex
+				subs	r2, r2, #1
+				ldr	r3, [r0], #4
+				str	r3, [r1], #4
+				bne	copyex
 #endif
         /* zero the bss */
         ldr     r1, =bsp_section_bss_end
@@ -169,7 +153,11 @@ _bss_init:
         cmp     r0, r1
         strlot  r2, [r0], #4
         blo     _bss_init        /* loop while r0 < r1 */
-
+#if 0
+        bl  CSP_LED_NBRs_Init
+        bl  CSP_LED_NBR1_on
+        bl  CSP_LED_NBR2_on
+#endif 
 
         /* --- Initialize stack pointer registers */
         /* Enter IRQ mode and set up the IRQ stack pointer */
@@ -233,11 +221,7 @@ _bss_init:
         stmia   r0!, {r2-r9}
 #endif
         /* Now we are prepared to start the BSP's C code */
-#if 0
-        bl  CSP_LED_NBRs_Init
-        bl  CSP_LED_NBR1_on
-        bl  CSP_LED_NBR2_on
-#endif        
+      
         mov     r0, #0
         bl      boot_card
 
@@ -252,4 +236,30 @@ _bss_init:
 _hang:  b       _hang
 
 
-
+/* The following handlers do not do anything useful */
+	.globl Undefined_Handler
+Undefined_Handler:
+				B       Undefined_Handler
+	.globl SWI_Handler
+SWI_Handler:
+				B       SWI_Handler
+	.globl Prefetch_Handler
+Prefetch_Handler:
+				B       Prefetch_Handler
+	.globl Abort_Handler
+Abort_Handler:
+        B       Abort_Handler
+	.globl IRQ_Handler
+IRQ_Handler:
+        B       IRQ_Handler
+	.globl FIQ_Handler
+FIQ_Handler:
+        B       FIQ_Handler
+#endif
+/* .globl Reset_Handler */
+	.globl Undefined_Handler
+	.globl SWI_Handler
+	.globl Prefetch_Handler
+	.globl Abort_Handler
+	.globl IRQ_Handler
+	.globl FIQ_Handler
