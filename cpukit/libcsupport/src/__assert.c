@@ -1,5 +1,11 @@
-/*  __assert - small RTEMS Specific Implementation
+/**
+ *  @file
  *
+ *  @brief Evaluate Assertion
+ *  @ingroup libcsupport
+ */
+
+/*
  *  COPYRIGHT (c) 2007.
  *  On-Line Applications Research Corporation (OAR).
  *
@@ -16,7 +22,8 @@
 #include <rtems.h>
 
 #if defined(RTEMS_NEWLIB) && !defined(HAVE___ASSERT_FUNC)
-/*
+
+/**
  * Newlib 1.16.0 added this method.  Together these provide an
  * RTEMS safe, low memory implementation.
  */
@@ -34,11 +41,15 @@ void __assert_func(
     (func) ? ", function: " : "",
     (func) ? func : ""
   );
-  rtems_fatal_error_occurred(0);
+  rtems_fatal( RTEMS_FATAL_SOURCE_ASSERT, (rtems_fatal_code) func );
 }
 #endif
 
 #if defined(RTEMS_NEWLIB) && !defined(HAVE___ASSERT)
+
+/**
+ *  small RTEMS Specific Implementation
+ */
 void __assert(
   const char *file,
   int         line,

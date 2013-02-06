@@ -1,3 +1,9 @@
+/**
+ * @file
+ *
+ * @brief Altera Nios II CPU Department Source
+ */
+
 /*
  *  Copyright (c) 2011 embedded brains GmbH
  *
@@ -72,6 +78,8 @@ extern "C" {
 #define CPU_LITTLE_ENDIAN TRUE
 
 #define CPU_STACK_MINIMUM_SIZE (4 * 1024)
+
+#define CPU_SIZEOF_POINTER 4
 
 /*
  * Alignment value according to "Nios II Processor Reference" chapter 7
@@ -251,8 +259,8 @@ void _CPU_Initialize_vectors( void );
  * _CPU_ISR_Disable().  The value is not modified.
  *
  * This flash code is optimal for all Nios II configurations.  The rdctl does
- * not flush the pipeline and has only a late result penalty.  The wrctl on the
- * other hand leads to a pipeline flush.
+ * not flush the pipeline and has only a late result penalty.  The wrctl on
+ * the other hand leads to a pipeline flush.
  */
 #define _CPU_ISR_Flash( _isr_cookie ) \
   do { \
@@ -288,7 +296,7 @@ uint32_t _CPU_ISR_Get_level( void );
 
 /**
  * @brief Initializes the CPU context.
- * 
+ *
  * The following steps are performed:
  *  - setting a starting address
  *  - preparing the stack
@@ -316,14 +324,23 @@ void _CPU_Context_Initialize(
 
 void _CPU_Fatal_halt( uint32_t _error ) RTEMS_COMPILER_NO_RETURN_ATTRIBUTE;
 
+/**
+ * @brief CPU initialization.
+ */
 void _CPU_Initialize( void );
 
+/**
+ * @brief CPU ISR install raw handler.
+ */
 void _CPU_ISR_install_raw_handler(
   uint32_t vector,
   proc_ptr new_handler,
   proc_ptr *old_handler
 );
 
+/**
+ * @brief CPU ISR install vector.
+ */
 void _CPU_ISR_install_vector(
   uint32_t vector,
   proc_ptr new_handler,
@@ -335,6 +352,8 @@ void _CPU_Context_switch( Context_Control *run, Context_Control *heir );
 void _CPU_Context_restore(
   Context_Control *new_context
 ) RTEMS_COMPILER_NO_RETURN_ATTRIBUTE;
+
+void _CPU_Exception_frame_print( const CPU_Exception_frame *frame );
 
 static inline uint32_t CPU_swap_u32( uint32_t value )
 {

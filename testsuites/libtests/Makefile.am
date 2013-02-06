@@ -1,6 +1,8 @@
 ACLOCAL_AMFLAGS = -I ../aclocal
 
 SUBDIRS = POSIX
+SUBDIRS += md501
+SUBDIRS += sparsedisk01
 SUBDIRS += block16
 SUBDIRS += block15
 SUBDIRS += block14

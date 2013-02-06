@@ -1,3 +1,8 @@
+/**
+ * @file
+ *
+ * @brief NIOS II Utility
+ */
 /*
  * Copyright (c) 2011 embedded brains GmbH.  All rights reserved.
  *
@@ -307,6 +312,10 @@ static inline bool _Nios2_Has_internal_interrupt_controller( void )
   return _Nios2_ISR_Get_status_mask() == NIOS2_ISR_STATUS_MASK_IIC;
 }
 
+/*
+ *  @brief Nios2 ISR Set level
+ *
+ */
 uint32_t _Nios2_ISR_Set_level( uint32_t new_level, uint32_t status );
 
 typedef struct {
@@ -399,6 +408,10 @@ bool _Nios2_MPU_Setup_region_registers(
   uint32_t *mpuacc
 );
 
+/**
+ * @brief Nios2 MPU Get region descriptor.
+ *
+ */
 bool _Nios2_MPU_Get_region_descriptor(
   const Nios2_MPU_Configuration *config,
   int index,
@@ -488,6 +501,9 @@ static inline void _Nios2_MPU_Restore( uint32_t config )
   _Nios2_Set_ctlreg_config( config );
 }
 
+/**
+ * @brief Nios2 MPU disable protected.
+ */
 uint32_t _Nios2_MPU_Disable_protected( void );
 
 void _Nios2_MPU_Reset( const Nios2_MPU_Configuration *config );

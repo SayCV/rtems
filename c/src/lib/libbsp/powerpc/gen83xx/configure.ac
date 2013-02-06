@@ -63,6 +63,9 @@ RTEMS_BSPOPTS_SET([HAS_UBOOT],[mpc8309som],[1])
 RTEMS_BSPOPTS_SET([HAS_UBOOT],[mpc8313erdb],[1])
 RTEMS_BSPOPTS_HELP([HAS_UBOOT],[if defined, enables U-Boot support])
 
+# Disable interrupt nesting for the MPC8313ERDB since the interrupt server
+# support requires that.  The interrupt server is necessary for the USB stack.
+RTEMS_BSPOPTS_SET([GEN83XX_ENABLE_INTERRUPT_NESTING],[mpc8313erdb],[])
 RTEMS_BSPOPTS_SET([GEN83XX_ENABLE_INTERRUPT_NESTING],[*],[1])
 RTEMS_BSPOPTS_HELP([GEN83XX_ENABLE_INTERRUPT_NESTING],[enable interrupt nesting])
 
@@ -73,7 +76,7 @@ AM_CONDITIONAL(HAS_NETWORKING,test "$HAS_NETWORKING" = "yes")
 AC_CONFIG_FILES([Makefile])
 
 RTEMS_BSP_BOOTCARD_OPTIONS
-RTEMS_BSP_CLEANUP_OPTIONS(0, 0)
+RTEMS_BSP_CLEANUP_OPTIONS(0, 1)
 RTEMS_BSP_LINKCMDS
 
 RTEMS_PPC_EXCEPTIONS

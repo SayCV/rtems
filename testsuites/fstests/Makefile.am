@@ -1,6 +1,8 @@
 ACLOCAL_AMFLAGS = -I ../aclocal
 
-SUBDIRS =
+SUBDIRS = 
+SUBDIRS += fsdosfswrite01
+SUBDIRS += fsdosfsformat01
 SUBDIRS += fsfseeko01
 SUBDIRS += fsdosfssync01
 SUBDIRS += imfs_fserror
@@ -29,7 +31,7 @@ SUBDIRS += mrfs_fsrdwr
 SUBDIRS += mrfs_fssymlink
 SUBDIRS += mrfs_fstime
 SUBDIRS += mrfs_fsfpathconf
-SUBDIRS += mrfs_fsrfsbitmap01
+SUBDIRS += fsrfsbitmap01
 SUBDIRS += fsnofs01
 SUBDIRS += fsimfsgeneric01
 SUBDIRS += fsbdpart01

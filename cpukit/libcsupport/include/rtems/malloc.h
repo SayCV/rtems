@@ -27,6 +27,14 @@ extern "C" {
 #endif
 
 /**
+ *  @defgroup MallocSupport Malloc Support
+ *
+ *  @ingroup libcsupport
+ *
+ *  @brief RTEMS extensions to the Malloc Family
+ */
+
+/**
  *  @brief C program heap control.
  *
  *  This is the pointer to the heap control structure used to manage the C
@@ -80,6 +88,9 @@ typedef void *(*rtems_heap_extend_handler)(
   size_t alloc_size
 );
 
+/**
+ *  @brief RTEMS Extend Heap via Sbrk
+ */
 void *rtems_heap_extend_via_sbrk(
   Heap_Control *heap,
   size_t alloc_size
@@ -99,7 +110,7 @@ typedef void (*rtems_malloc_dirtier_t)(void *, size_t);
 extern rtems_malloc_dirtier_t rtems_malloc_dirty_helper;
 
 /**
- *  @brief Dirty memory function
+ *  @brief Dirty Memory Function
  *
  *  This method fills the specified area with a non-zero pattern
  *  to aid in debugging programs which do not initialize their
@@ -146,7 +157,7 @@ void malloc_report_statistics_with_plugin(
 );
 
 /**
- *  @brief RTEMS variation on Aligned Memory Allocation
+ *  @brief RTEMS Variation on Aligned Memory Allocation
  *
  *  This method is a help memalign implementation which does all
  *  error checking done by posix_memalign() EXCEPT it does NOT

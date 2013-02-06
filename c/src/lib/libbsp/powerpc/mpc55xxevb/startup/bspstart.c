@@ -48,30 +48,20 @@ unsigned int bsp_clock_speed = 0;
 
 uint32_t bsp_clicks_per_usec = 0;
 
-void BSP_panic( char *s)
+void _BSP_Fatal_error(unsigned n)
 {
 	rtems_interrupt_level level;
 
 	rtems_interrupt_disable( level);
 
-	printk( "%s PANIC %s\n", _RTEMS_version, s);
-
-	while (1) {
-		/* Do nothing */
+	while (true) {
+		mpc55xx_wait_for_interrupt();
 	}
 }
 
-void _BSP_Fatal_error( unsigned n)
+void mpc55xx_fatal(rtems_fatal_code code)
 {
-	rtems_interrupt_level level;
-
-	rtems_interrupt_disable( level);
-
-	printk( "%s PANIC ERROR %u\n", _RTEMS_version, n);
-
-	while (1) {
-		/* Do nothing */
-	}
+  rtems_fatal(RTEMS_FATAL_SOURCE_BSP_SPECIFIC, code);
 }
 
 static void null_pointer_protection(void)
@@ -90,7 +80,6 @@ static void null_pointer_protection(void)
 
 void bsp_start(void)
 {
-	rtems_status_code sc = RTEMS_SUCCESSFUL;
 	ppc_cpu_id_t myCpu;
 	ppc_cpu_revision_t myCpuRevision;
 
@@ -119,21 +108,17 @@ void bsp_start(void)
 
 	/* Initialize exceptions */
 	ppc_exc_vector_base = (uint32_t) mpc55xx_exc_vector_base;
-	sc = ppc_exc_initialize(
+	ppc_exc_initialize(
 		PPC_INTERRUPT_DISABLE_MASK_DEFAULT,
                 (uintptr_t) bsp_section_work_begin,
-                Configuration.interrupt_stack_size
+                rtems_configuration_get_interrupt_stack_size()
 	);
-	if (sc != RTEMS_SUCCESSFUL) {
-		BSP_panic( "Cannot initialize exceptions");
-	}
-	ppc_exc_set_handler(ASM_ALIGN_VECTOR, ppc_exc_alignment_handler);
+	#ifndef PPC_EXC_CONFIG_USE_FIXED_HANDLER
+		ppc_exc_set_handler(ASM_ALIGN_VECTOR, ppc_exc_alignment_handler);
+	#endif
 
 	/* Initialize interrupts */
-	sc = bsp_interrupt_initialize();
-	if (sc != RTEMS_SUCCESSFUL) {
-		BSP_panic( "Cannot initialize interrupts");
-	}
+	bsp_interrupt_initialize();
 
 	mpc55xx_edma_init();
 	#ifdef MPC55XX_EMIOS_PRESCALER

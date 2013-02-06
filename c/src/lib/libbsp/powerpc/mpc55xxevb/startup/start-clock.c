@@ -38,7 +38,7 @@
       }
 
       if (!lock) {
-        bsp_reset();
+        mpc55xx_fatal(MPC55XX_FATAL_FMPLL_LOCK);
       }
     }
   #endif

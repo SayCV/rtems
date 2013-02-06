@@ -1,11 +1,13 @@
 /**
- * @file rtems/score/cpu.h
+ * @file 
+ * 
+ * @brief Motorola M68K CPU Dependent Source
+ * 
+ * This include file contains information pertaining to the Motorola
+ * m68xxx processor family.
  */
 
 /*
- *  This include file contains information pertaining to the Motorola
- *  m68xxx processor family.
- *
  *  COPYRIGHT (c) 1989-2011.
  *  On-Line Applications Research Corporation (OAR).
  *
@@ -380,6 +382,8 @@ SCORE_EXTERN _CPU_ISR_handler_entry _CPU_ISR_jump_table[256];
  */
 #define CPU_PRIORITY_MAXIMUM             M68K_CPU_PRIORITY_MAXIMUM
 
+#define CPU_SIZEOF_POINTER 4
+
 /*
  *  m68k is pretty tolerant of alignment.  Just put things on 4 byte boundaries.
  */
@@ -706,6 +710,8 @@ void _CPU_Context_save_fp(
 void _CPU_Context_restore_fp(
   Context_Control_fp **fp_context_ptr
 );
+
+void _CPU_Exception_frame_print( const CPU_Exception_frame *frame );
 
 #if (M68K_HAS_FPSP_PACKAGE == 1)
 /*

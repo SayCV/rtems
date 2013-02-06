@@ -1,8 +1,10 @@
+/**
+ * @file
+ *
+ * @brief Create an IMFS Node
+ * @ingroup IMFS
+ */
 /*
- *  IMFS_create_node()
- *
- *  Routine to create a new in memory file system node.
- *
  *  COPYRIGHT (c) 1989-2010.
  *  On-Line Applications Research Corporation (OAR).
  *
@@ -30,6 +32,7 @@ IMFS_jnode_t *IMFS_allocate_node(
 )
 {
   IMFS_jnode_t        *node;
+  IMFS_jnode_t        *initialized_node;
   struct timeval       tv;
 
   if ( namelen > IMFS_NAME_MAX ) {
@@ -80,13 +83,14 @@ IMFS_jnode_t *IMFS_allocate_node(
   node->stat_ctime  = (time_t) tv.tv_sec;
   node->st_ino = ++fs_info->ino_count;
 
-  return (*node->control->node_initialize)( node, info );
+  initialized_node = (*node->control->node_initialize)( node, info );
+  if ( initialized_node == NULL ) {
+    free( node );
+  }
+
+  return initialized_node;
 }
 
-/*
- *  Create an IMFS filesystem node of an arbitrary type that is NOT
- *  the root directory node.
- */
 IMFS_jnode_t *IMFS_create_node_with_control(
   const rtems_filesystem_location_info_t *parentloc,
   const IMFS_node_control *node_control,

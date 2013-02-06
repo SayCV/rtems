@@ -111,7 +111,7 @@ rtems_bsdnet_initialize_sockaddr_in(struct sockaddr_in *addr)
 	memcpy(addr, &address_template, sizeof(*addr));
 }
 
-static uint32_t
+uint32_t
 rtems_bsdnet_semaphore_release_recursive(void)
 {
 #ifdef RTEMS_FAST_MUTEX
@@ -128,7 +128,7 @@ rtems_bsdnet_semaphore_release_recursive(void)
 #endif
 }
 
-static void
+void
 rtems_bsdnet_semaphore_obtain_recursive(uint32_t nest_count)
 {
 	uint32_t i;
@@ -334,12 +334,6 @@ rtems_bsdnet_initialize (void)
 		rtems_bsdnet_ticks_per_second = 1;
 	rtems_bsdnet_microseconds_per_tick =
 		1000000 / rtems_bsdnet_ticks_per_second;
-
-	/*
-	 * Ensure that `seconds' is greater than 0
-	 */
-    while (rtems_bsdnet_seconds_since_boot() == 0)
-        rtems_task_wake_after(1);
 
 	/*
 	 * Set up BSD-style sockets
@@ -712,28 +706,6 @@ rtems_status_code rtems_bsdnet_event_receive (
 	sc = rtems_event_system_receive (event_in, option_set, ticks, event_out);
 	rtems_bsdnet_semaphore_obtain ();
 	return sc;
-}
-
-/*
- * Return time since startup
- */
-void
-microtime (struct timeval *t)
-{
-	rtems_interval now;
-
-	now = rtems_clock_get_ticks_since_boot();
-	t->tv_sec = now / rtems_bsdnet_ticks_per_second;
-	t->tv_usec = (now % rtems_bsdnet_ticks_per_second) * rtems_bsdnet_microseconds_per_tick;
-}
-
-unsigned long
-rtems_bsdnet_seconds_since_boot (void)
-{
-	rtems_interval now;
-
-	now = rtems_clock_get_ticks_since_boot();
-	return now / rtems_bsdnet_ticks_per_second;
 }
 
 /*

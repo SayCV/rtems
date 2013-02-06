@@ -51,6 +51,15 @@ extern "C" {
  */
 
 /**
+ * @brief Generic BSP fatal error codes.
+ */
+typedef enum {
+  BSP_GENERIC_FATAL_EXCEPTION_INITIALIZATION,
+  BSP_GENERIC_FATAL_INTERRUPT_INITIALIZATION,
+  BSP_GENERIC_FATAL_SPURIOUS_INTERRUPT
+} bsp_generic_fatal_code;
+
+/**
  * @brief Global pointer to the command line of boot_card().
  */
 extern const char *bsp_boot_cmdline;
@@ -62,8 +71,6 @@ void bsp_pretasking_hook(void);
 void bsp_predriver_hook(void);
 
 void bsp_postdriver_hook(void);
-
-void bsp_cleanup(uint32_t status);
 
 void bsp_reset(void);
 
@@ -99,15 +106,12 @@ void bsp_reset(void);
  *   - 1st task executes C++ global constructors
  *   - .... application runs ...
  *   - exit
- * - back to here eventually
- * - bsp_cleanup()
- *
- * If something goes wrong bsp_cleanup() will be called out of order.
+ * - will not return to here
  *
  * This style of initialization ensures that the C++ global constructors are
  * executed after RTEMS is initialized.
  */
-uint32_t boot_card(const char *cmdline);
+void boot_card(const char *cmdline) RTEMS_COMPILER_NO_RETURN_ATTRIBUTE;
 
 #ifdef CONFIGURE_MALLOC_BSP_SUPPORTS_SBRK
   /**

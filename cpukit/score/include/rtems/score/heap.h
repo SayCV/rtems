@@ -3,7 +3,7 @@
  *
  * @ingroup ScoreHeap
  *
- * @brief Heap Handler API.
+ * @brief Heap Handler API
  */
 
 /*
@@ -126,9 +126,8 @@ extern "C" {
  * block indicates that the previous block is used, this ensures that the
  * last block appears as used for the _Heap_Is_used() and _Heap_Is_free()
  * functions.
- *
- * @{
  */
+/**@{**/
 
 typedef struct Heap_Control Heap_Control;
 
@@ -558,7 +557,7 @@ bool _Heap_Free( Heap_Control *heap, void *addr );
  * If @a dump is @c true, then diagnostic messages will be printed to standard
  * output.  In this case @a source is used to mark the output lines.
  *
- * Returns @c true if no errors occured, and @c false if the heap is corrupt.
+ * Returns @c true if no errors occurred, and @c false if the heap is corrupt.
  */
 bool _Heap_Walk(
   Heap_Control *heap,

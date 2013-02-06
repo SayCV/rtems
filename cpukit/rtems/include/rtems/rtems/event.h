@@ -1,23 +1,28 @@
 /**
  * @file rtems/rtems/event.h
  *
- *  This include file contains the information pertaining to the Event
- *  Manager.  This manager provides a high performance method of communication
- *  and synchronization.
+ * @defgroup ClassicEvent Events
  *
- *  Directives provided are:
+ * @ingroup ClassicRTEMS
+ * @brief Information Related to Event Manager
  *
- *     - send an event set to a task
- *     - receive event condition
+ * This include file contains the information pertaining to the Event
+ * Manager. This manager provides a high performance method of communication
+ * and synchronization.
+ *
+ * Directives provided are:
+ *
+ * - send an event set to a task
+ * - receive event condition
  *
  */
 
-/*  COPYRIGHT (c) 1989-2008.
- *  On-Line Applications Research Corporation (OAR).
+/* COPYRIGHT (c) 1989-2008.
+ * On-Line Applications Research Corporation (OAR).
  *
- *  The license and distribution terms for this file may be
- *  found in the file LICENSE in this distribution or at
- *  http://www.rtems.com/license/LICENSE.
+ * The license and distribution terms for this file may be
+ * found in the file LICENSE in this distribution or at
+ * http://www.rtems.com/license/LICENSE.
  */
 
 #ifndef _RTEMS_RTEMS_EVENT_H
@@ -70,7 +75,7 @@ extern "C" {
  *  - Events do not hold or transport data.
  *  - Events are not queued. In other words, if an event is sent more than once
  *    to a task before being received, the second and subsequent send
- *    operations to that same task have no effect. 
+ *    operations to that same task have no effect.
  *
  *  An event set is posted when it is directed (or sent) to a task. A pending
  *  event is an event that has been posted but not received. An event condition
@@ -80,7 +85,7 @@ extern "C" {
  *  selected by the user. The @ref RTEMS_EVENT_ANY algorithm states that an
  *  event condition is satisfied when at least a single requested event is
  *  posted.  The @ref RTEMS_EVENT_ALL algorithm states that an event condition
- *  is satisfied when every requested event is posted. 
+ *  is satisfied when every requested event is posted.
  *
  *  An event set or condition is built by a bitwise or of the desired events.
  *  The set of valid events is @ref RTEMS_EVENT_0 through @ref RTEMS_EVENT_31.
@@ -92,44 +97,44 @@ extern "C" {
  *  For example, when sending the event set consisting of @ref RTEMS_EVENT_6,
  *  @ref RTEMS_EVENT_15, and @ref RTEMS_EVENT_31, the event parameter to the
  *  rtems_event_send() directive should be @ref RTEMS_EVENT_6 |
- *  @ref RTEMS_EVENT_15 | @ref RTEMS_EVENT_31. 
+ *  @ref RTEMS_EVENT_15 | @ref RTEMS_EVENT_31.
  *
  *  @{
  */
 
 /**
- *  @brief Sends an event set to the target task.
+ * @brief Sends an Event Set to the Target Task
  *
- *  This directive sends an event set @a event_in to the task specified by
- *  @a id.
+ * This directive sends an event set @a event_in to the task specified by
+ * @a id.
  *
- *  Based upon the state of the target task, one of the following situations
- *  applies. The target task is
- *  - blocked waiting for events.
- *    If the waiting task's input event condition is
- *    - satisfied, then the task is made ready for execution.
- *    - not satisfied, then the event set is posted but left pending and the
- *      task remains blocked. 
- *  - not waiting for events.
- *    - The event set is posted and left pending. 
+ * Based upon the state of the target task, one of the following situations
+ * applies. The target task is
+ * - blocked waiting for events.
+ * If the waiting task's input event condition is
+ * - satisfied, then the task is made ready for execution.
+ * - not satisfied, then the event set is posted but left pending and the
+ * task remains blocked.
+ * - not waiting for events.
+ * - The event set is posted and left pending.
  *
- *  Identical events sent to a task are not queued. In other words, the second,
- *  and subsequent, posting of an event to a task before it can perform an
- *  rtems_event_receive() has no effect.
+ * Identical events sent to a task are not queued. In other words, the second,
+ * and subsequent, posting of an event to a task before it can perform an
+ * rtems_event_receive() has no effect.
  *
- *  The calling task will be preempted if it has preemption enabled and a
- *  higher priority task is unblocked as the result of this directive.
+ * The calling task will be preempted if it has preemption enabled and a
+ * higher priority task is unblocked as the result of this directive.
  *
- *  Sending an event set to a global task which does not reside on the local
- *  node will generate a request telling the remote node to send the event set
- *  to the appropriate task.
+ * Sending an event set to a global task which does not reside on the local
+ * node will generate a request telling the remote node to send the event set
+ * to the appropriate task.
  *
- *  @param[in] id Identifier of the target task.  Specifying @ref RTEMS_SELF
- *  results in the event set being sent to the calling task.
- *  @param[in] event_in Event set sent to the target task.
+ * @param[in] id Identifier of the target task. Specifying @ref RTEMS_SELF
+ * results in the event set being sent to the calling task.
+ * @param[in] event_in Event set sent to the target task.
  *
- *  @retval RTEMS_SUCCESSFUL Successful operation.
- *  @retval RTEMS_INVALID_ID Invalid task identifier.
+ * @retval RTEMS_SUCCESSFUL Successful operation.
+ * @retval RTEMS_INVALID_ID Invalid task identifier.
  */
 rtems_status_code rtems_event_send (
   rtems_id        id,
@@ -137,65 +142,65 @@ rtems_status_code rtems_event_send (
 );
 
 /**
- *  @brief Receives pending events.
+ * @brief Receives pending events.
  *
- *  This directive attempts to receive the event condition specified in
- *  @a event_in.  If @a event_in is set to @ref RTEMS_PENDING_EVENTS, then the
- *  current pending events are returned in @a event_out and left pending. The
- *  @aref RTEMS_WAIT and @aref RTEMS_NO_WAIT options in the @a option_set
- *  parameter are used to specify whether or not the task is willing to wait
- *  for the event condition to be satisfied.  The @ref RTEMS_EVENT_ANY and @ref
- *  RTEMS_EVENT_ALL are used in the @a option_set parameter to specify whether
- *  at least a single event or the complete event set is necessary to satisfy
- *  the event condition.  The @a event_out parameter is returned to the calling
- *  task with the value that corresponds to the events in @a event_in that were
- *  satisfied.
+ * This directive attempts to receive the event condition specified in
+ * @a event_in. If @a event_in is set to @ref RTEMS_PENDING_EVENTS, then the
+ * current pending events are returned in @a event_out and left pending. The
+ * @aref RTEMS_WAIT and @aref RTEMS_NO_WAIT options in the @a option_set
+ * parameter are used to specify whether or not the task is willing to wait
+ * for the event condition to be satisfied. The @ref RTEMS_EVENT_ANY and @ref
+ * RTEMS_EVENT_ALL are used in the @a option_set parameter to specify whether
+ * at least a single event or the complete event set is necessary to satisfy
+ * the event condition. The @a event_out parameter is returned to the calling
+ * task with the value that corresponds to the events in @a event_in that were
+ * satisfied.
  *
- *  A task can determine the pending event set by using a value of
- *  @ref RTEMS_PENDING_EVENTS for the input event set @a event_in.  The pending
- *  events are returned to the calling task but the event set is left
- *  unaltered.
+ * A task can determine the pending event set by using a value of
+ * @ref RTEMS_PENDING_EVENTS for the input event set @a event_in. The pending
+ * events are returned to the calling task but the event set is left
+ * unaltered.
  *
- *  A task can receive all of the currently pending events by using the a value
- *  of @ref RTEMS_ALL_EVENTS for the input event set @a event_in and
- *  @ref RTEMS_NO_WAIT | @ref RTEMS_EVENT_ANY for the option set @a option_set.
- *  The pending events are returned to the calling task and the event set is
- *  cleared.  If no events are pending then the @ref RTEMS_UNSATISFIED status
- *  code will be returned.
+ * A task can receive all of the currently pending events by using the a value
+ * of @ref RTEMS_ALL_EVENTS for the input event set @a event_in and
+ * @ref RTEMS_NO_WAIT | @ref RTEMS_EVENT_ANY for the option set @a option_set.
+ * The pending events are returned to the calling task and the event set is
+ * cleared. If no events are pending then the @ref RTEMS_UNSATISFIED status
+ * code will be returned.
  *
- *  If pending events satisfy the event condition, then @a event_out is set to
- *  the satisfied events and the pending events in the event condition are
- *  cleared.  If the event condition is not satisfied and @ref RTEMS_NO_WAIT is
- *  specified, then @a event_out is set to the currently satisfied events.  If
- *  the calling task chooses to wait, then it will block waiting for the event
- *  condition.
+ * If pending events satisfy the event condition, then @a event_out is set to
+ * the satisfied events and the pending events in the event condition are
+ * cleared.  If the event condition is not satisfied and @ref RTEMS_NO_WAIT is
+ * specified, then @a event_out is set to the currently satisfied events.  If
+ * the calling task chooses to wait, then it will block waiting for the event
+ * condition.
  *
- *  If the calling task must wait for the event condition to be satisfied, then
- *  the timeout parameter is used to specify the maximum interval to wait.  If
- *  it is set to @ref RTEMS_NO_TIMEOUT, then the calling task will wait forever.
+ * If the calling task must wait for the event condition to be satisfied, then
+ * the timeout parameter is used to specify the maximum interval to wait. If
+ * it is set to @ref RTEMS_NO_TIMEOUT, then the calling task will wait forever.
  *
- *  This directive only affects the events specified in @a event_in. Any
- *  pending events that do not correspond to any of the events specified in
- *  @a event_in will be left pending.
+ * This directive only affects the events specified in @a event_in. Any
+ * pending events that do not correspond to any of the events specified in
+ * @a event_in will be left pending.
  *
- *  A clock tick is required to support the wait with time out functionality of
- *  this directive.
+ * A clock tick is required to support the wait with time out functionality of
+ * this directive.
  *
- *  @param[in] event_in Set of requested events (input events).
- *  @param[in] option_set Use a bitwise or of the following options
- *  - @ref RTEMS_WAIT - task will wait for event (default),
- *  - @ref RTEMS_NO_WAIT - task should not wait,
- *  - @ref RTEMS_EVENT_ALL - return after all events (default), and
- *  - @ref RTEMS_EVENT_ANY - return after any events.
- *  @param[in] ticks Time out in ticks.  Use @ref RTEMS_NO_TIMEOUT to wait
- *  without a time out (potentially forever).
- *  @param[out] event_out Set of received events (output events).
- * 
- *  @retval RTEMS_SUCCESSFUL Successful operation.
- *  @retval RTEMS_UNSATISFIED Input events not satisfied (only with the
- *  @ref RTEMS_NO_WAIT option).
- *  @retval RTEMS_INVALID_ADDRESS The @a event_out pointer is @c NULL.
- *  @retval RTEMS_TIMEOUT Timed out waiting for events.
+ * @param[in] event_in Set of requested events (input events).
+ * @param[in] option_set Use a bitwise or of the following options
+ * - @ref RTEMS_WAIT - task will wait for event (default),
+ * - @ref RTEMS_NO_WAIT - task should not wait,
+ * - @ref RTEMS_EVENT_ALL - return after all events (default), and
+ * - @ref RTEMS_EVENT_ANY - return after any events.
+ * @param[in] ticks Time out in ticks. Use @ref RTEMS_NO_TIMEOUT to wait
+ * without a time out (potentially forever).
+ * @param[out] event_out Set of received events (output events).
+ *
+ * @retval RTEMS_SUCCESSFUL Successful operation.
+ * @retval RTEMS_UNSATISFIED Input events not satisfied (only with the
+ * @ref RTEMS_NO_WAIT option).
+ * @retval RTEMS_INVALID_ADDRESS The @a event_out pointer is @c NULL.
+ * @retval RTEMS_TIMEOUT Timed out waiting for events.
  */
 rtems_status_code rtems_event_receive (
   rtems_event_set  event_in,
@@ -218,9 +223,8 @@ rtems_status_code rtems_event_receive (
  * The event @ref RTEMS_EVENT_SYSTEM_TRANSIENT is used for transient usage.
  * See also @ref ClassicEventTransient.  This event may be used by every entity
  * that fulfils its usage pattern.
- *
- * @{
  */
+/**@{**/
 
 /**
  * @brief Reserved system event for network SBWAIT usage.
@@ -362,9 +366,8 @@ rtems_status_code rtems_event_system_receive(
  *   assert(req.work_done);
  * }
  * @endcode
- *
- * @{
  */
+/**@{**/
 
 /**
  * @brief See rtems_event_system_send().
@@ -435,6 +438,16 @@ typedef struct {
  */
 #define EVENT_CURRENT  0
 
+/**
+ *  @brief Event Manager Initialization
+ *
+ *  Event Manager
+ *
+ *  This routine performs the initialization necessary for this manager.
+ *
+ *  - INTERRUPT LATENCY:
+ *    + single case
+ */
 void _Event_Manager_initialization( void );
 
 void _Event_Seize(
@@ -448,6 +461,14 @@ void _Event_Seize(
   States_Control                    wait_state
 );
 
+/**
+ *  @brief Surrender Event
+ *
+ *  - INTERRUPT LATENCY:
+ *    + before flash
+ *    + after flash
+ *    + check sync
+ */
 void _Event_Surrender(
   Thread_Control                   *the_thread,
   rtems_event_set                   event_in,
@@ -456,6 +477,9 @@ void _Event_Surrender(
   States_Control                    wait_state
 );
 
+/**
+ *  @brief Timeout Event
+ */
 void _Event_Timeout(
   Objects_Id  id,
   void       *arg

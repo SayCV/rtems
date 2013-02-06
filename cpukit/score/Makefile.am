@@ -52,6 +52,7 @@ include_rtems_score_HEADERS += include/rtems/score/timestamp64.h
 include_rtems_score_HEADERS += include/rtems/score/tod.h
 include_rtems_score_HEADERS += include/rtems/score/tqdata.h
 include_rtems_score_HEADERS += include/rtems/score/userext.h
+include_rtems_score_HEADERS += include/rtems/score/userextimpl.h
 include_rtems_score_HEADERS += include/rtems/score/watchdog.h
 include_rtems_score_HEADERS += include/rtems/score/wkspace.h
 include_rtems_score_HEADERS += include/rtems/score/cpuopts.h
@@ -157,6 +158,7 @@ libscore_a_SOURCES += src/coremutex.c src/coremutexflush.c \
 
 ## CORE_PERCPU_C_FILES
 libscore_a_SOURCES += src/percpu.c
+libscore_a_SOURCES += src/percpuasm.c
 
 ## CORE_RWLOCK_C_FILES
 if HAS_PTHREADS
@@ -188,7 +190,8 @@ libscore_a_SOURCES += src/objectallocate.c src/objectclose.c \
     src/objectshrinkinformation.c src/objectgetnoprotection.c \
     src/objectidtoname.c src/objectgetnameasstring.c src/objectsetname.c \
     src/objectgetinfo.c src/objectgetinfoid.c src/objectapimaximumclass.c \
-    src/objectnamespaceremove.c
+    src/objectnamespaceremove.c \
+    src/objectactivecount.c
 
 ## SCHEDULER_C_FILES
 libscore_a_SOURCES += src/scheduler.c
@@ -303,11 +306,11 @@ libscore_a_SOURCES += src/ts64addto.c src/ts64dividebyinteger.c \
     src/ts64getnanoseconds.c src/ts64getseconds.c \
     src/ts64lessthan.c \
     src/ts64set.c src/ts64settozero.c src/ts64subtract.c \
-    src/ts64toticks.c src/ts64totimespec.c
+    src/ts64toticks.c src/ts64totimespec.c src/ts64totimeval.c
 
 ## TOD_C_FILES
 libscore_a_SOURCES += src/coretod.c src/coretodset.c src/coretodget.c \
-    src/coretodgetuptime.c src/coretodgetuptimetimespec.c src/coretodtickle.c \
+    src/coretodgetuptimetimespec.c src/coretodtickle.c \
     src/coretodmsecstoticks.c src/coretodtickspersec.c src/coretodusectoticks.c
 
 ## WATCHDOG_C_FILES
@@ -318,15 +321,13 @@ libscore_a_SOURCES += src/watchdog.c src/watchdogadjust.c \
 
 ## USEREXT_C_FILES
 libscore_a_SOURCES += src/userextaddset.c \
-    src/userext.c src/userextremoveset.c src/userextthreadbegin.c \
-    src/userextthreadcreate.c src/userextthreaddelete.c \
-    src/userextthreadrestart.c src/userextthreadstart.c \
-    src/userextthreadswitch.c
+    src/userext.c src/userextremoveset.c src/userextiterate.c
 
 ## STD_C_FILES
 libscore_a_SOURCES += src/apiext.c src/chain.c src/chainappend.c \
     src/chainextract.c src/chainget.c src/chaininsert.c \
     src/chainappendempty.c src/chainprependempty.c src/chaingetempty.c \
+    src/chainnodecount.c \
     src/interr.c src/isr.c src/wkspace.c src/wkstringduplicate.c
 
 EXTRA_DIST = src/Unlimited.txt
